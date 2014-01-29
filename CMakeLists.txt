@@ -4,6 +4,8 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 INCLUDE(qt/qt.cmake)
 INCLUDE(files.cmake)
 
+ADD_DEFINITIONS(-ansi -pedantic -Wall -Wextra -Wno-long-long)
+
 ADD_LIBRARY(gl_wrappers STATIC ${gl_wrappers_files})
 ADD_LIBRARY(dummy_gl STATIC ${dummy_gl_wrappers_files})
 ADD_LIBRARY(normal_gl STATIC ${normal_gl_wrappers_files})

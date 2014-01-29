@@ -37,6 +37,10 @@
 #  include "../include/GL/glxew.h"
 #endif
 
+#ifdef __GNUC__
+ #pragma GCC diagnostic ignored "-Wpedantic"
+#endif
+
 /*
  * Define glewGetContext and related helper macros.
  */
