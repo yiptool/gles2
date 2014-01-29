@@ -229,12 +229,10 @@ namespace GL
 
 	Int getInteger(Enum param);
 
-	UInt createShaderFromSource(Enum type, const char * data, const char * name);
-	UInt createShaderFromSource(Enum type, const std::string & data, const char * name);
-	UInt createShaderFromSource(Enum type, const char * data, const std::string & name);
-	UInt createShaderFromSource(Enum type, const std::string & data, const std::string & name);
+	UInt createShaderFromSource(Enum type, const char * data);
+	UInt createShaderFromSource(Enum type, const std::string & data);
 
 	void linkAndValidateProgram(UInt program);
-};
+}
 
 #endif

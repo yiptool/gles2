@@ -32,7 +32,7 @@ GL::Int GL::getInteger(Enum param)
 	return value;
 }
 
-GL::UInt GL::createShaderFromSource(Enum type, const char * data, const char * name)
+GL::UInt GL::createShaderFromSource(Enum type, const char * data)
 {
 	UInt shader = createShader(type);
 	try
@@ -59,19 +59,9 @@ GL::UInt GL::createShaderFromSource(Enum type, const char * data, const char * n
 	return shader;
 }
 
-GL::UInt GL::createShaderFromSource(Enum type, const std::string & data, const char * name)
+GL::UInt GL::createShaderFromSource(Enum type, const std::string & data)
 {
-	return createShaderFromSource(type, data.c_str(), name);
-}
-
-GL::UInt GL::createShaderFromSource(Enum type, const char * data, const std::string & name)
-{
-	return createShaderFromSource(type, data, name.c_str());
-}
-
-GL::UInt GL::createShaderFromSource(Enum type, const std::string & data, const std::string & name)
-{
-	return createShaderFromSource(type, data.c_str(), name.c_str());
+	return createShaderFromSource(type, data.c_str());
 }
 
 void GL::linkAndValidateProgram(UInt program)
