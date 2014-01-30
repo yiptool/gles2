@@ -22,6 +22,8 @@
 //
 #include "../gl.h"
 #include "../gl_error.h"
+#include <sstream>
+#include <stdexcept>
 
 #ifdef _WIN32
  #ifndef WIN32_LEAN_AND_MEAN
@@ -51,6 +53,19 @@
  } // extern "C"
  } // namespace
 #endif
+
+void GL::init()
+{
+  #ifdef USE_GLEW
+	GLenum err = glewInit();
+	if (GLEW_OK != err)
+	{
+		std::stringstream ss;
+		ss << "unable to initialize the GLEW library: " << glewGetErrorString(err);
+		throw std::runtime_error(ss.str());
+	}
+  #endif
+}
 
 void GL::activeTexture(Enum texture)
 {

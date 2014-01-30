@@ -80,6 +80,8 @@ namespace GL
 	typedef int32_t Fixed;
   #endif
 
+	void init();
+
 	void activeTexture(Enum texture);
 	void attachShader(UInt program, UInt shader);
 	void bindAttribLocation(UInt program, UInt index, const Char * name);

@@ -26,6 +26,11 @@
 
 QGLFunctions * g_OpenGLFunctions;
 
+void GL::init()
+{
+	assert(g_OpenGLFunctions);
+}
+
 void GL::activeTexture(Enum texture)
 {
 	assert(g_OpenGLFunctions);

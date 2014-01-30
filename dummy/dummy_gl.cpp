@@ -22,6 +22,10 @@
 //
 #include "../gl.h"
 
+void GL::init()
+{
+}
+
 void GL::activeTexture(Enum texture)
 {
 	(void)texture;
