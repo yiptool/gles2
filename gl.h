@@ -50,9 +50,9 @@ namespace GL
 		NONE = 0,
 		POINTS = 0x0000,
 		LINES = 0x0001,
-		#define GL_CONSTANT(X, Y) X = Y,
+		#define GL_CONSTANT_(X, Y) X = Y,
 		#include "gl_constants.h"
-		#undef GL_CONSTANT
+		#undef GL_CONSTANT_
 		BLEND_EQUATION = BLEND_EQUATION_RGB
 	};
 

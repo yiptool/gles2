@@ -31,9 +31,9 @@ std::ostream & operator<<(std::ostream & s, GL::Enum value)
 	{
 	case GL::FALSE: break;
 	case GL::TRUE: break;
-	#define GL_CONSTANT(X, Y) case Y: s << "GL_" << #X; return s;
+	#define GL_CONSTANT_(X, Y) case Y: s << "GL_" << #X; return s;
 	#include "gl_constants.h"
-	#undef GL_CONSTANT
+	#undef GL_CONSTANT_
 	}
 	s << static_cast<int>(value);
 	return s;
