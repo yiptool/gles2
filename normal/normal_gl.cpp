@@ -48,8 +48,8 @@
 #ifdef USE_GLEW
  namespace {
  extern "C" {
- #include "../glew/include/GL/glew.h"
- #include "../glew/src/glew.c.h"
+ #include "glew/include/GL/glew.h"
+ #include "glew/src/glew.c.h"
  } // extern "C"
  } // namespace
 #endif

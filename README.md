@@ -5,10 +5,19 @@ GLWrappers
 This is the convenient library for cross-platform OpenGL programming.
 
 
+Building
+========
+
+This library is not intended to be built directly. Instead it is supposed
+to be included into projects using the *buildtool*. Please consult the
+[buildtool](https://github.com/zapolnov/buildtool) documentation for more
+information.
+
+
 License
 =======
 
-Copyright (c) 2014 Nikolay Zapolnov (zapolnov@gmail.com).
+Copyright © 2014 Nikolay Zapolnov (zapolnov@gmail.com).
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -31,9 +40,9 @@ THE SOFTWARE.
 -------
 
 **The OpenGL Extension Wrangler Library**<br />
-Copyright (C) 2002-2008, Milan Ikits (milan ikits[]ieee org)<br />
-Copyright (C) 2002-2008, Marcelo E. Magallon (mmagallo[]debian org)<br />
-Copyright (C) 2002, Lev Povalahev<br />
+Copyright © 2002-2008, Milan Ikits (milan ikits[]ieee org)<br />
+Copyright © 2002-2008, Marcelo E. Magallon (mmagallo[]debian org)<br />
+Copyright © 2002, Lev Povalahev<br />
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -64,7 +73,7 @@ THE POSSIBILITY OF SUCH DAMAGE.
 **Mesa 3-D graphics library**<br />
 Version:  7.0
 
-Copyright (C) 1999-2007  *Brian Paul*   All Rights Reserved.
+Copyright © 1999-2007  *Brian Paul*   All Rights Reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the "Software"),
@@ -85,7 +94,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -------
 
-Copyright (c) 2007 The Khronos Group Inc.
+Copyright © 2007 The Khronos Group Inc.
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and/or associated documentation files (the
