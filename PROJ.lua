@@ -1,4 +1,6 @@
 
+SUBPROJECT("gl_wrappers")
+
 SOURCE_FILES {
 	"gl.cpp",
 	"gl.h",
