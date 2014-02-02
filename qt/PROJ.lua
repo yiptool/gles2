@@ -1,6 +1,4 @@
 
-DISABLE_WARNINGS(true)
-
 USES_OPENGL()
 
 USES_QT {
