@@ -45,7 +45,7 @@ GL::UInt GL::createShaderFromSource(Enum type, const char * data)
 		getShaderiv(shader, INFO_LOG_LENGTH, &logLength);
 		if (logLength > 0)
 		{
-			std::vector<char> log(logLength + 1, 0);
+			std::vector<char> log(static_cast<size_t>(logLength + 1), 0);
 			getShaderInfoLog(shader, logLength, NULL, &log[0]);
 			GL::PRINT_WARNING(&log[0]);
 		}
@@ -72,7 +72,7 @@ void GL::linkAndValidateProgram(UInt program)
 	getProgramiv(program, INFO_LOG_LENGTH, &logLength);
 	if (logLength > 0)
 	{
-		std::vector<char> log(logLength + 1, 0);
+		std::vector<char> log(static_cast<size_t>(logLength + 1), 0);
 		getProgramInfoLog(program, logLength, NULL, &log[0]);
 
 		std::stringstream ss;
@@ -86,7 +86,7 @@ void GL::linkAndValidateProgram(UInt program)
 	getProgramiv(program, INFO_LOG_LENGTH, &logLength);
 	if (logLength > 0)
 	{
-		std::vector<char> log(logLength + 1, 0);
+		std::vector<char> log(static_cast<size_t>(logLength + 1), 0);
 		getProgramInfoLog(program, logLength, NULL, &log[0]);
 
 		std::stringstream ss;

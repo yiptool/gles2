@@ -62,9 +62,9 @@ std::string decodeGLClearMask_(GL::Bitfield mask)
 		prefix = " | ";
 	}
 
-	mask &= ~GL::COLOR_BUFFER_BIT;
-	mask &= ~GL::DEPTH_BUFFER_BIT;
-	mask &= ~GL::STENCIL_BUFFER_BIT;
+	mask &= ~static_cast<GL::Bitfield>(GL::COLOR_BUFFER_BIT);
+	mask &= ~static_cast<GL::Bitfield>(GL::DEPTH_BUFFER_BIT);
+	mask &= ~static_cast<GL::Bitfield>(GL::STENCIL_BUFFER_BIT);
 	if (mask != 0)
 		ss << prefix << "0x" << std::hex << mask;
 
