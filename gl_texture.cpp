@@ -20,7 +20,8 @@ GLTexture::GLTexture(GLResourceManager * mgr, const std::string & resName)
 GLTexture::~GLTexture()
 {
 	destroy();
-	m_Manager->m_Textures.erase(name());
+	if (m_Manager)
+		m_Manager->m_Textures.erase(name());
 }
 
 void GLTexture::destroy()

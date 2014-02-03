@@ -28,6 +28,11 @@ GLResourceManager::GLResourceManager()
 
 GLResourceManager::~GLResourceManager()
 {
+	for (TextureMap::const_iterator it = m_Textures.begin(); it != m_Textures.end(); ++it)
+	{
+		it->second->m_Manager = NULL;
+		it->second->destroy();
+	}
 }
 
 GLTexturePtr GLResourceManager::getTexture(const std::string & name, bool * isNew)
