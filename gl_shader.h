@@ -20,37 +20,35 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 //
-#include "gl_texture.h"
-#include "gl_resource_manager.h"
-#include <sstream>
-#include <stdexcept>
+#ifndef __febb0d4d5a85eeec11c8faf83e369998__
+#define __febb0d4d5a85eeec11c8faf83e369998__
 
-GLTexture::GLTexture(GLResourceManager * mgr, const std::string & resName)
-	: GLResource(resName),
-	  m_Handle(0),
-	  m_Manager(mgr)
-{
-	GL::genTextures(1, &m_Handle);
-	if (!m_Manager->m_Textures.insert(std::make_pair(resName, this)).second)
-	{
-		std::stringstream ss;
-		ss << "duplicate texture '" << resName << "'.";
-		throw std::runtime_error(ss.str());
-	}
-}
+#include "gl_resource.h"
+#include "gl.h"
 
-GLTexture::~GLTexture()
-{
-	destroy();
-	if (m_Manager)
-		m_Manager->m_Textures.erase(name());
-}
+class GLResourceManager;
 
-void GLTexture::destroy()
+class GLShader : public GLResource
 {
-	if (m_Handle != 0)
-	{
-		GL::deleteTextures(1, &m_Handle);
-		m_Handle = 0;
-	}
-}
+protected:
+	GLShader(GLResourceManager * mgr, const std::string & resName, GL::Enum type);
+	~GLShader();
+
+	inline GL::Enum type() const { return m_Type; }
+
+	void destroy();
+
+private:
+	GL::UInt m_Handle;
+	GL::Enum m_Type;
+	GLResourceManager * m_Manager;
+
+	GLShader(const GLShader &);
+	GLShader & operator=(const GLShader &);
+
+	friend class GLResourceManager;
+};
+
+typedef GLPtr<GLShader> GLShaderPtr;
+
+#endif

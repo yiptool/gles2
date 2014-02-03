@@ -20,37 +20,39 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 //
-#include "gl_texture.h"
+#include "gl_shader.h"
 #include "gl_resource_manager.h"
 #include <sstream>
+#include <iomanip>
 #include <stdexcept>
 
-GLTexture::GLTexture(GLResourceManager * mgr, const std::string & resName)
+GLShader::GLShader(GLResourceManager * mgr, const std::string & resName, GL::Enum type)
 	: GLResource(resName),
 	  m_Handle(0),
+	  m_Type(type),
 	  m_Manager(mgr)
 {
-	GL::genTextures(1, &m_Handle);
-	if (!m_Manager->m_Textures.insert(std::make_pair(resName, this)).second)
+	m_Handle = GL::createShader(type);
+	if (!m_Manager->m_Shaders.insert(std::make_pair(std::make_pair(type, resName), this)).second)
 	{
 		std::stringstream ss;
-		ss << "duplicate texture '" << resName << "'.";
+		ss << "duplicate shader '" << resName << "' (type 0x" << std::hex << type << ").";
 		throw std::runtime_error(ss.str());
 	}
 }
 
-GLTexture::~GLTexture()
+GLShader::~GLShader()
 {
 	destroy();
 	if (m_Manager)
-		m_Manager->m_Textures.erase(name());
+		m_Manager->m_Shaders.erase(std::make_pair(m_Type, name()));
 }
 
-void GLTexture::destroy()
+void GLShader::destroy()
 {
 	if (m_Handle != 0)
 	{
-		GL::deleteTextures(1, &m_Handle);
+		GL::deleteShader(m_Handle);
 		m_Handle = 0;
 	}
 }

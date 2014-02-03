@@ -27,19 +27,24 @@
 
 #if __cplusplus >= 201103L || defined(__clang__)
  #include <unordered_map>
+ #define GL_UNORDERED_MAP_HASH std::hash
  #define GL_UNORDERED_MAP std::unordered_map
 #elif defined(__GLIBCXX__)
  #include <tr1/unordered_map>
+ #define GL_UNORDERED_MAP_HASH std::tr1::hash
  #define GL_UNORDERED_MAP std::tr1::unordered_map
 #elif defined(_MSC_VER) && _MSC_VER >= 1500 /* Visual Studio 2008 */
  #include <unordered_map>
+ #define GL_UNORDERED_MAP_HASH std::tr1::hash
  #define GL_UNORDERED_MAP std::tr1::unordered_map
 #elif defined(_MSC_VER) && _MSC_VER >= 1310 /* Visual Studio .NET 2003 */
  #include <hash_map>
+ #define GL_UNORDERED_MAP_HASH stdext::hash_compare
  #define GL_UNORDERED_MAP stdext::hash_map
 #else
  #include <map>
  #warning Using std::map instead of std::unordered_map
+ #undef GL_UNORDERED_MAP_HASH
  #define GL_UNORDERED_MAP std::map
 #endif
 

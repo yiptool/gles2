@@ -51,3 +51,20 @@ GLTexturePtr GLResourceManager::getTexture(const std::string & name, bool * isNe
 		return new GLTexture(this, name);
 	}
 }
+
+GLShaderPtr GLResourceManager::getShader(GL::Enum type, const std::string & name, bool * isNew)
+{
+	ShaderMap::const_iterator it = m_Shaders.find(std::make_pair(type, name));
+	if (it != m_Shaders.end())
+	{
+		if (isNew)
+			*isNew = false;
+		return it->second;
+	}
+	else
+	{
+		if (isNew)
+			*isNew = true;
+		return new GLShader(this, name, type);
+	}
+}

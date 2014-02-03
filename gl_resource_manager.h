@@ -23,6 +23,7 @@
 #ifndef __bd60f34af632e5ad2a9b5bb6a5b67443__
 #define __bd60f34af632e5ad2a9b5bb6a5b67443__
 
+#include "gl_shader.h"
 #include "gl_texture.h"
 #include "gl_util.h"
 
@@ -33,15 +34,34 @@ public:
 	~GLResourceManager();
 
 	GLTexturePtr getTexture(const std::string & name, bool * isNew = NULL);
+	GLShaderPtr getShader(GL::Enum type, const std::string & name, bool * isNew = NULL);
 
 private:
+	typedef std::pair<GL::Enum, std::string> ShaderMapKey;
+
+  #ifndef GL_UNORDERED_MAP_HASH
+	typedef GL_UNORDERED_MAP<ShaderMapKey, GLShader *> ShaderMap;
+  #else
+	struct ShaderMapKeyHasher
+	{
+		static const size_t bucket_size = 4;
+		static const size_t min_buckets = 8;
+		inline bool operator()(const ShaderMapKey & k1, const ShaderMapKey & k2) const { return k1 < k2; }
+		inline size_t operator()(const ShaderMapKey & v) const
+			{ return GL_UNORDERED_MAP_HASH<std::string>()(v.second); }
+	};
+	typedef GL_UNORDERED_MAP<ShaderMapKey, GLShader *, ShaderMapKeyHasher> ShaderMap;
+  #endif
+
 	typedef GL_UNORDERED_MAP<std::string, GLTexture *> TextureMap;
 
+	ShaderMap m_Shaders;
 	TextureMap m_Textures;
 
 	GLResourceManager(const GLResourceManager &);
 	GLResourceManager & operator=(const GLResourceManager &);
 
+	friend class GLShader;
 	friend class GLTexture;
 };
 
