@@ -20,38 +20,41 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 //
-#ifndef __febb0d4d5a85eeec11c8faf83e369998__
-#define __febb0d4d5a85eeec11c8faf83e369998__
+#ifndef __de0fbe635f005208ed3510d2587da3d0__
+#define __de0fbe635f005208ed3510d2587da3d0__
 
+#include "gl_shader.h"
 #include "gl_resource.h"
 #include "gl.h"
 
-class GLProgram;
 class GLResourceManager;
 
-class GLShader : public GLResource
+class GLProgram : public GLResource
 {
 public:
-	inline GL::Enum type() const { return m_Type; }
+	void attachShader(const GLShaderPtr & shader);
+	void detachShader(const GLShaderPtr & shader);
+
+	inline void linkAndValidate() { GL::linkAndValidateProgram(m_Handle); }
+
+	inline void use() { GL::useProgram(m_Handle); }
 
 protected:
-	GLShader(GLResourceManager * mgr, const std::string & resName, GL::Enum type);
-	~GLShader();
+	GLProgram(GLResourceManager * mgr);
+	~GLProgram();
 
 	void destroy();
 
 private:
 	GL::UInt m_Handle;
-	GL::Enum m_Type;
 	GLResourceManager * m_Manager;
 
-	GLShader(const GLShader &);
-	GLShader & operator=(const GLShader &);
+	GLProgram(const GLProgram &);
+	GLProgram & operator=(const GLProgram &);
 
-	friend class GLProgram;
 	friend class GLResourceManager;
 };
 
-typedef GLPtr<GLShader> GLShaderPtr;
+typedef GLPtr<GLProgram> GLProgramPtr;
 
 #endif

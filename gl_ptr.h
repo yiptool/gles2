@@ -49,8 +49,8 @@ public:
 
 	inline R * get() const { return p; }
 
-	inline R & operator*() const { ASSERT(p); return *p; }
-	inline R * operator->() const { ASSERT(p); return p; }
+	inline R & operator*() const { assert(p); return *p; }
+	inline R * operator->() const { assert(p); return p; }
 
 	inline bool operator==(const GLPtr<R> & src) const { return p == src.p; }
 	template <class T> inline bool operator==(const GLPtr<T> & src) const { return p == src.p; }

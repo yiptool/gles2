@@ -20,63 +20,43 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 //
+#include "gl_program.h"
 #include "gl_resource_manager.h"
+#include <sstream>
+#include <stdexcept>
 
-GLResourceManager::GLResourceManager()
+static const std::string g_ProgramResource("<shader-program>");
+
+GLProgram::GLProgram(GLResourceManager * mgr)
+	: GLResource(g_ProgramResource),
+	  m_Manager(mgr)
 {
+	m_Handle = GL::createProgram();
+	m_Manager->m_Programs.insert(this);
 }
 
-GLResourceManager::~GLResourceManager()
+GLProgram::~GLProgram()
 {
-	for (TextureMap::const_iterator it = m_Textures.begin(); it != m_Textures.end(); ++it)
-	{
-		it->second->m_Manager = NULL;
-		it->second->destroy();
-	}
-
-	for (ShaderMap::const_iterator it = m_Shaders.begin(); it != m_Shaders.end(); ++it)
-	{
-		it->second->m_Manager = NULL;
-		it->second->destroy();
-	}
-
-	for (ProgramSet::const_iterator it = m_Programs.begin(); it != m_Programs.end(); ++it)
-	{
-		(*it)->m_Manager = NULL;
-		(*it)->destroy();
-	}
+	destroy();
+	if (m_Manager)
+		m_Manager->m_Programs.erase(this);
 }
 
-GLTexturePtr GLResourceManager::getTexture(const std::string & name, bool * isNew)
+void GLProgram::attachShader(const GLShaderPtr & shader)
 {
-	TextureMap::const_iterator it = m_Textures.find(name);
-	if (it != m_Textures.end())
-	{
-		if (isNew)
-			*isNew = false;
-		return it->second;
-	}
-	else
-	{
-		if (isNew)
-			*isNew = true;
-		return new GLTexture(this, name);
-	}
+	GL::attachShader(m_Handle, shader->m_Handle);
 }
 
-GLShaderPtr GLResourceManager::getShader(GL::Enum type, const std::string & name, bool * isNew)
+void GLProgram::detachShader(const GLShaderPtr & shader)
 {
-	ShaderMap::const_iterator it = m_Shaders.find(std::make_pair(type, name));
-	if (it != m_Shaders.end())
+	GL::detachShader(m_Handle, shader->m_Handle);
+}
+
+void GLProgram::destroy()
+{
+	if (m_Handle != 0)
 	{
-		if (isNew)
-			*isNew = false;
-		return it->second;
-	}
-	else
-	{
-		if (isNew)
-			*isNew = true;
-		return new GLShader(this, name, type);
+		GL::deleteProgram(m_Handle);
+		m_Handle = 0;
 	}
 }

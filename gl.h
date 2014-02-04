@@ -234,6 +234,9 @@ namespace GL
 	UInt createShaderFromSource(Enum type, const char * data);
 	UInt createShaderFromSource(Enum type, const std::string & data);
 
+	void initShaderFromSource(UInt shader, const char * data);
+	void initShaderFromSource(UInt shader, const std::string & data);
+
 	void linkAndValidateProgram(UInt program);
 }
 

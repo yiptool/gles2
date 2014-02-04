@@ -24,6 +24,7 @@
 #define __bd60f34af632e5ad2a9b5bb6a5b67443__
 
 #include "gl_shader.h"
+#include "gl_program.h"
 #include "gl_texture.h"
 #include "gl_util.h"
 
@@ -34,6 +35,8 @@ public:
 	~GLResourceManager();
 
 	GLTexturePtr getTexture(const std::string & name, bool * isNew = NULL);
+
+	inline GLProgramPtr createProgram() { return new GLProgram(this); }
 	GLShaderPtr getShader(GL::Enum type, const std::string & name, bool * isNew = NULL);
 
 private:
@@ -54,14 +57,17 @@ private:
   #endif
 
 	typedef GL_UNORDERED_MAP<std::string, GLTexture *> TextureMap;
+	typedef GL_UNORDERED_SET<GLProgram *> ProgramSet;
 
 	ShaderMap m_Shaders;
 	TextureMap m_Textures;
+	ProgramSet m_Programs;
 
 	GLResourceManager(const GLResourceManager &);
 	GLResourceManager & operator=(const GLResourceManager &);
 
 	friend class GLShader;
+	friend class GLProgram;
 	friend class GLTexture;
 };
 

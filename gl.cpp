@@ -35,33 +35,39 @@ GL::Int GL::getInteger(Enum param)
 GL::UInt GL::createShaderFromSource(Enum type, const char * data)
 {
 	UInt shader = createShader(type);
-	try
-	{
-		const Char * source[1] = { data };
-		shaderSource(shader, 1, source, NULL);
-		compileShader(shader);
-
-		Int logLength = 0;
-		getShaderiv(shader, INFO_LOG_LENGTH, &logLength);
-		if (logLength > 0)
-		{
-			std::vector<char> log(static_cast<size_t>(logLength + 1), 0);
-			getShaderInfoLog(shader, logLength, NULL, &log[0]);
-			GL::PRINT_WARNING(&log[0]);
-		}
-	}
-	catch (...)
-	{
+	try {
+		initShaderFromSource(shader, data);
+	} catch (...) {
 		deleteShader(shader);
 		throw;
 	}
-
 	return shader;
 }
 
 GL::UInt GL::createShaderFromSource(Enum type, const std::string & data)
 {
 	return createShaderFromSource(type, data.c_str());
+}
+
+void GL::initShaderFromSource(UInt shader, const char * data)
+{
+	const Char * source[1] = { data };
+	shaderSource(shader, 1, source, NULL);
+	compileShader(shader);
+
+	Int logLength = 0;
+	getShaderiv(shader, INFO_LOG_LENGTH, &logLength);
+	if (logLength > 0)
+	{
+		std::vector<char> log(static_cast<size_t>(logLength + 1), 0);
+		getShaderInfoLog(shader, logLength, NULL, &log[0]);
+		GL::PRINT_WARNING(&log[0]);
+	}
+}
+
+void GL::initShaderFromSource(UInt shader, const std::string & data)
+{
+	return initShaderFromSource(shader, data.c_str());
 }
 
 void GL::linkAndValidateProgram(UInt program)

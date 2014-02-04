@@ -7,6 +7,8 @@ SOURCE_FILES {
 	"gl_constants.h",
 	"gl_error.cpp",
 	"gl_error.h",
+	"gl_program.cpp",
+	"gl_program.h",
 	"gl_ptr.h",
 	"gl_resource.cpp",
 	"gl_resource.h",
