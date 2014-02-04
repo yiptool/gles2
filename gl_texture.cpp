@@ -27,7 +27,9 @@
 
 GLTexture::GLTexture(const std::string & resName)
 	: GLResource(resName),
-	  m_Handle(0)
+	  m_Handle(0),
+	  m_Width(0),
+	  m_Height(0)
 {
 	GL::genTextures(1, &m_Handle);
 }
@@ -44,4 +46,6 @@ void GLTexture::destroy()
 		GL::deleteTextures(1, &m_Handle);
 		m_Handle = 0;
 	}
+	m_Width = 0;
+	m_Height = 0;
 }

@@ -33,6 +33,13 @@ class GLTexture : public GLResource
 public:
 	inline void bind(GL::Enum target = GL::TEXTURE_2D) { GL::bindTexture(target, m_Handle); }
 
+	int width() const { return m_Width; }
+	int height() const { return m_Height; }
+
+	inline void setSize(int width, int height) { m_Width = width; m_Height = height; }
+	inline void setWidth(int width) { m_Width = width; }
+	inline void setHeight(int height) { m_Height = height; }
+
 protected:
 	GLTexture(const std::string & resName);
 	~GLTexture();
@@ -41,6 +48,8 @@ protected:
 
 private:
 	GL::UInt m_Handle;
+	int m_Width;
+	int m_Height;
 
 	GLTexture(const GLTexture &);
 	GLTexture & operator=(const GLTexture &);
