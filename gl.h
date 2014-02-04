@@ -24,6 +24,7 @@
 #define __32269a077ca0af3de2fc3fff927880bb__
 
 #include <string>
+#include <vector>
 #include <cstddef>
 
 #ifndef _MSC_VER
@@ -37,6 +38,8 @@
 #ifdef TRUE
  #undef TRUE
 #endif
+
+class GLResourceManager;
 
 namespace GL
 {
@@ -79,6 +82,8 @@ namespace GL
 	typedef uint8_t UByte;
 	typedef int32_t Fixed;
   #endif
+
+	typedef std::string (* PFNLOADSHADERPROC)(const std::string & name);
 
 	void init();
 
@@ -235,7 +240,13 @@ namespace GL
 	UInt createShaderFromSource(Enum type, const std::string & data);
 
 	void initShaderFromSource(UInt shader, const char * data);
+	void initShaderFromSource(UInt shader, const std::vector<const char *> & data);
 	void initShaderFromSource(UInt shader, const std::string & data);
+
+	void initProgramFromSource(UInt program, const char * data,
+		GLResourceManager * resmgr = NULL, PFNLOADSHADERPROC loadFile = NULL);
+	void initProgramFromSource(UInt program, const std::string & data,
+		GLResourceManager * resmgr = NULL, PFNLOADSHADERPROC loadFile = NULL);
 
 	void linkAndValidateProgram(UInt program);
 }

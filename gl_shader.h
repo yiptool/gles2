@@ -34,6 +34,7 @@ class GLShader : public GLResource
 {
 public:
 	inline GL::Enum type() const { return m_Type; }
+	inline GL::UInt handle() const { return m_Handle; }
 
 protected:
 	GLShader(const std::string & resName, GL::Enum type);
