@@ -32,6 +32,8 @@ class GLResourceManager;
 class GLProgram : public GLResource
 {
 public:
+	inline GL::UInt handle() const { return m_Handle; }
+
 	void attachShader(const GLShaderPtr & shader);
 	void detachShader(const GLShaderPtr & shader);
 
