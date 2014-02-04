@@ -25,21 +25,15 @@
 #include <sstream>
 #include <stdexcept>
 
-static const std::string g_ProgramResource("<shader-program>");
-
-GLProgram::GLProgram(GLResourceManager * mgr)
-	: GLResource(g_ProgramResource),
-	  m_Manager(mgr)
+GLProgram::GLProgram(const std::string & resName)
+	: GLResource(resName)
 {
 	m_Handle = GL::createProgram();
-	m_Manager->m_Programs.insert(this);
 }
 
 GLProgram::~GLProgram()
 {
 	destroy();
-	if (m_Manager)
-		m_Manager->m_Programs.erase(this);
 }
 
 void GLProgram::attachShader(const GLShaderPtr & shader)

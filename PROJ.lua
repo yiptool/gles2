@@ -10,6 +10,8 @@ SOURCE_FILES {
 	"gl_program.cpp",
 	"gl_program.h",
 	"gl_ptr.h",
+	"gl_ptr_weak.cpp",
+	"gl_ptr_weak.h",
 	"gl_resource.cpp",
 	"gl_resource.h",
 	"gl_resource_manager.cpp",

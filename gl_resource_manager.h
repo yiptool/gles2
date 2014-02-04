@@ -23,10 +23,11 @@
 #ifndef __bd60f34af632e5ad2a9b5bb6a5b67443__
 #define __bd60f34af632e5ad2a9b5bb6a5b67443__
 
+#include "gl_texture.h"
 #include "gl_shader.h"
 #include "gl_program.h"
-#include "gl_texture.h"
 #include "gl_util.h"
+#include <vector>
 
 class GLResourceManager
 {
@@ -34,16 +35,22 @@ public:
 	GLResourceManager();
 	~GLResourceManager();
 
+	virtual void collectGarbage();
+
+	GLTexturePtr createTexture(const std::string & name = m_DefaultTextureName);
 	GLTexturePtr getTexture(const std::string & name, bool * isNew);
 
-	inline GLProgramPtr createProgram() { return new GLProgram(this); }
+	GLShaderPtr createShader(GL::Enum type, const std::string & name = m_DefaultShaderName);
 	GLShaderPtr getShader(GL::Enum type, const std::string & name, bool * isNew);
+
+	GLProgramPtr createProgram(const std::string & name = m_DefaultProgramName);
+	GLProgramPtr getProgram(const std::string & name, bool * isNew);
 
 private:
 	typedef std::pair<GL::Enum, std::string> ShaderMapKey;
 
   #ifndef GL_UNORDERED_MAP_HASH
-	typedef GL_UNORDERED_MAP<ShaderMapKey, GLShader *> ShaderMap;
+	typedef GL_UNORDERED_MAP<ShaderMapKey, GLShaderWeakPtr> ShaderMap;
   #else
 	struct ShaderMapKeyHasher
 	{
@@ -53,15 +60,24 @@ private:
 		inline size_t operator()(const ShaderMapKey & v) const
 			{ return GL_UNORDERED_MAP_HASH<std::string>()(v.second); }
 	};
-	typedef GL_UNORDERED_MAP<ShaderMapKey, GLShader *, ShaderMapKeyHasher> ShaderMap;
+	typedef GL_UNORDERED_MAP<ShaderMapKey, GLShaderWeakPtr, ShaderMapKeyHasher> ShaderMap;
   #endif
 
-	typedef GL_UNORDERED_MAP<std::string, GLTexture *> TextureMap;
-	typedef GL_UNORDERED_SET<GLProgram *> ProgramSet;
+	typedef GL_UNORDERED_MAP<std::string, GLTextureWeakPtr> TextureMap;
+	typedef GL_UNORDERED_MAP<std::string, GLProgramWeakPtr> ProgramMap;
+	typedef std::vector<GLResourceWeakPtr> ResourceList;
 
-	ShaderMap m_Shaders;
+	static const std::string m_DefaultTextureName;
+	static const std::string m_DefaultShaderName;
+	static const std::string m_DefaultProgramName;
+
+	ResourceList m_AllResources;
 	TextureMap m_Textures;
-	ProgramSet m_Programs;
+	ShaderMap m_Shaders;
+	ProgramMap m_Programs;
+
+	template <class T, class M, class K> GLPtr<T> getResource(M & map, const K & key, bool * isNew);
+	template <class M> void collectGarbageInMap(M & map);
 
 	GLResourceManager(const GLResourceManager &);
 	GLResourceManager & operator=(const GLResourceManager &);

@@ -25,6 +25,7 @@
 
 #include "gl_resource.h"
 #include "gl.h"
+#include <utility>
 
 class GLProgram;
 class GLResourceManager;
@@ -35,7 +36,8 @@ public:
 	inline GL::Enum type() const { return m_Type; }
 
 protected:
-	GLShader(GLResourceManager * mgr, const std::string & resName, GL::Enum type);
+	GLShader(const std::string & resName, GL::Enum type);
+	GLShader(const std::pair<GL::Enum, std::string> & pair);
 	~GLShader();
 
 	void destroy();
@@ -43,7 +45,6 @@ protected:
 private:
 	GL::UInt m_Handle;
 	GL::Enum m_Type;
-	GLResourceManager * m_Manager;
 
 	GLShader(const GLShader &);
 	GLShader & operator=(const GLShader &);
@@ -53,5 +54,6 @@ private:
 };
 
 typedef GLPtr<GLShader> GLShaderPtr;
+typedef GLWeakPtr<GLShader> GLShaderWeakPtr;
 
 #endif

@@ -24,8 +24,11 @@
 #define __f471791f3e0fda4867317dc478eafd4f__
 
 #include "gl_ptr.h"
+#include "gl_ptr_weak.h"
+#include "gl_util.h"
 #include <string>
 
+class GLPtrWeakBase;
 class GLResourceManager;
 
 class GLResource
@@ -39,22 +42,25 @@ public:
 	inline void release() { assert(m_RefCount > 0); if (--m_RefCount == 0) deleteThis(); }
 
 protected:
-	inline GLResource(const std::string & resName) : m_RefCount(0), m_Name(resName) {}
-	virtual inline ~GLResource() { assert(m_RefCount == 0); }
+	GLResource(const std::string & resName);
+	virtual ~GLResource();
 
 	virtual void destroy() = 0;
 	virtual void deleteThis();
 
 private:
+	GL_UNORDERED_SET<GLPtrWeakBase *> m_WeakPtrs;
 	int m_RefCount;
 	std::string m_Name;
 
 	GLResource(const GLResource &);
 	GLResource & operator=(const GLResource &);
 
+	friend class GLPtrWeakBase;
 	friend class GLResourceManager;
 };
 
 typedef GLPtr<GLResource> GLResourcePtr;
+typedef GLWeakPtr<GLResource> GLResourceWeakPtr;
 
 #endif

@@ -34,14 +34,13 @@ public:
 	inline void bind(GL::Enum target = GL::TEXTURE_2D) { GL::bindTexture(target, m_Handle); }
 
 protected:
-	GLTexture(GLResourceManager * mgr, const std::string & resName);
+	GLTexture(const std::string & resName);
 	~GLTexture();
 
 	void destroy();
 
 private:
 	GL::UInt m_Handle;
-	GLResourceManager * m_Manager;
 
 	GLTexture(const GLTexture &);
 	GLTexture & operator=(const GLTexture &);
@@ -50,5 +49,6 @@ private:
 };
 
 typedef GLPtr<GLTexture> GLTexturePtr;
+typedef GLWeakPtr<GLTexture> GLTextureWeakPtr;
 
 #endif

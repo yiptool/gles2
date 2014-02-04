@@ -26,26 +26,25 @@
 #include <iomanip>
 #include <stdexcept>
 
-GLShader::GLShader(GLResourceManager * mgr, const std::string & resName, GL::Enum type)
+GLShader::GLShader(const std::string & resName, GL::Enum type)
 	: GLResource(resName),
 	  m_Handle(0),
-	  m_Type(type),
-	  m_Manager(mgr)
+	  m_Type(type)
 {
-	m_Handle = GL::createShader(type);
-	if (!m_Manager->m_Shaders.insert(std::make_pair(std::make_pair(type, resName), this)).second)
-	{
-		std::stringstream ss;
-		ss << "duplicate shader '" << resName << "' (type 0x" << std::hex << type << ").";
-		throw std::runtime_error(ss.str());
-	}
+	m_Handle = GL::createShader(m_Type);
+}
+
+GLShader::GLShader(const std::pair<GL::Enum, std::string> & pair)
+	: GLResource(pair.second),
+	  m_Handle(0),
+	  m_Type(pair.first)
+{
+	m_Handle = GL::createShader(m_Type);
 }
 
 GLShader::~GLShader()
 {
 	destroy();
-	if (m_Manager)
-		m_Manager->m_Shaders.erase(std::make_pair(m_Type, name()));
 }
 
 void GLShader::destroy()

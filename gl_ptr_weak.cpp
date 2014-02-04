@@ -20,41 +20,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 //
-#ifndef __de0fbe635f005208ed3510d2587da3d0__
-#define __de0fbe635f005208ed3510d2587da3d0__
-
-#include "gl_shader.h"
+#include "gl_ptr_weak.h"
 #include "gl_resource.h"
-#include "gl.h"
 
-class GLResourceManager;
-
-class GLProgram : public GLResource
+void GLPtrWeakBase::acquire()
 {
-public:
-	void attachShader(const GLShaderPtr & shader);
-	void detachShader(const GLShaderPtr & shader);
+	if (m_Resource)
+		m_Resource->m_WeakPtrs.insert(this);
+}
 
-	inline void linkAndValidate() { GL::linkAndValidateProgram(m_Handle); }
-
-	inline void use() { GL::useProgram(m_Handle); }
-
-protected:
-	GLProgram(const std::string & resName);
-	~GLProgram();
-
-	void destroy();
-
-private:
-	GL::UInt m_Handle;
-
-	GLProgram(const GLProgram &);
-	GLProgram & operator=(const GLProgram &);
-
-	friend class GLResourceManager;
-};
-
-typedef GLPtr<GLProgram> GLProgramPtr;
-typedef GLWeakPtr<GLProgram> GLProgramWeakPtr;
-
-#endif
+void GLPtrWeakBase::release()
+{
+	if (m_Resource)
+		m_Resource->m_WeakPtrs.erase(this);
+}
