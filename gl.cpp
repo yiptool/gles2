@@ -24,6 +24,7 @@
 #include "gl_resource_manager.h"
 #include "gl_shader.h"
 #include "gl_error.h"
+#include <cstring>
 #include <stdexcept>
 #include <vector>
 
