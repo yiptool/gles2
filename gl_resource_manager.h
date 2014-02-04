@@ -34,10 +34,10 @@ public:
 	GLResourceManager();
 	~GLResourceManager();
 
-	GLTexturePtr getTexture(const std::string & name, bool * isNew = NULL);
+	GLTexturePtr getTexture(const std::string & name, bool * isNew);
 
 	inline GLProgramPtr createProgram() { return new GLProgram(this); }
-	GLShaderPtr getShader(GL::Enum type, const std::string & name, bool * isNew = NULL);
+	GLShaderPtr getShader(GL::Enum type, const std::string & name, bool * isNew);
 
 private:
 	typedef std::pair<GL::Enum, std::string> ShaderMapKey;
