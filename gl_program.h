@@ -37,7 +37,8 @@ public:
 	void attachShader(const GLShaderPtr & shader);
 	void detachShader(const GLShaderPtr & shader);
 
-	inline void linkAndValidate() { GL::linkAndValidateProgram(m_Handle); }
+	inline void link() { GL::linkProgramEx(m_Handle); }
+	inline void validate() { GL::validateProgramEx(m_Handle); }
 
 	inline void use() { GL::useProgram(m_Handle); }
 

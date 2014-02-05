@@ -225,7 +225,7 @@ void GL::initProgramFromSource(UInt program, const std::string & data, GLResourc
 	return initProgramFromSource(program, data.c_str(), resmgr, loadFile);
 }
 
-void GL::linkAndValidateProgram(UInt program)
+void GL::linkProgramEx(UInt program)
 {
 	linkProgram(program);
 
@@ -240,10 +240,13 @@ void GL::linkAndValidateProgram(UInt program)
 		ss << "glLinkProgram(" << program << "): " << &log[0];
 		GL::PRINT_WARNING(ss.str());
 	}
+}
 
+void GL::validateProgramEx(UInt program)
+{
 	validateProgram(program);
 
-	logLength = 0;
+	Int logLength = 0;
 	getProgramiv(program, INFO_LOG_LENGTH, &logLength);
 	if (logLength > 0)
 	{
