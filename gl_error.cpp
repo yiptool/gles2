@@ -25,6 +25,10 @@
 #include <iomanip>
 #include <sstream>
 
+#ifdef LOGGER_H
+ #include LOGGER_H
+#endif
+
 std::ostream & operator<<(std::ostream & s, GL::Enum value)
 {
 	switch (value)
@@ -73,12 +77,20 @@ std::string decodeGLClearMask_(GL::Bitfield mask)
 
 static void printWarning(const std::string & message)
 {
+  #ifdef LOGGER_H
+	Log::warn() << "OpenGL warning: " << message;
+  #else
 	std::cerr << "OpenGL warning: " << message << std::endl;
+  #endif
 }
 
 static void printError(const std::string & message)
 {
+  #ifdef LOGGER_H
+	Log::error() << "OpenGL error: " << message;
+  #else
 	std::cerr << "OpenGL error: " << message << std::endl;
+  #endif
 }
 
 void (* GL::PRINT_WARNING)(const std::string & message) = printWarning;
