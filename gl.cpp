@@ -106,7 +106,7 @@ void GL::initProgramFromSource(UInt program, const char * data, GLResourceManage
 			size_t length = end - p;
 			while (length > 0 && iswhite(p[length - 1]))
 				--length;
-			lines.push_back(std::string(p, length));
+			lines.push_back(std::string(p, length) + "\n");
 			p = end + 1;
 		}
 		else
@@ -114,7 +114,7 @@ void GL::initProgramFromSource(UInt program, const char * data, GLResourceManage
 			size_t length = strlen(p);
 			while (length > 0 && iswhite(p[length - 1]))
 				--length;
-			lines.push_back(std::string(p, length));
+			lines.push_back(std::string(p, length) + "\n");
 			break;
 		}
 	}
@@ -183,6 +183,8 @@ void GL::initProgramFromSource(UInt program, const char * data, GLResourceManage
 			else
 			{
 				std::string filename(file);
+				if (filename.length() > 0 && filename[filename.length() - 1] == '\n')
+					filename.resize(filename.length() - 1);
 				bool isNew = false;
 				GLShaderPtr shader = resmgr->getShader(type, filename, &isNew);
 				if (isNew)
