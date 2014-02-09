@@ -64,7 +64,7 @@ void GL::initShaderFromSource(UInt shader, const char * data)
 	{
 		std::vector<char> log(static_cast<size_t>(logLength + 1), 0);
 		getShaderInfoLog(shader, logLength, NULL, &log[0]);
-		GL::PRINT_WARNING(&log[0]);
+		Log::warn() << &log[0];
 	}
 }
 
@@ -79,7 +79,7 @@ void GL::initShaderFromSource(UInt shader, const std::vector<const char *> & dat
 	{
 		std::vector<char> log(static_cast<size_t>(logLength + 1), 0);
 		getShaderInfoLog(shader, logLength, NULL, &log[0]);
-		GL::PRINT_WARNING(&log[0]);
+		Log::warn() << &log[0];
 	}
 }
 
@@ -237,10 +237,7 @@ void GL::linkProgramEx(UInt program)
 	{
 		std::vector<char> log(static_cast<size_t>(logLength + 1), 0);
 		getProgramInfoLog(program, logLength, NULL, &log[0]);
-
-		std::stringstream ss;
-		ss << "glLinkProgram(" << program << "): " << &log[0];
-		GL::PRINT_WARNING(ss.str());
+		Log::warn() << "glLinkProgram(" << program << "): " << &log[0];
 	}
 }
 
@@ -254,9 +251,6 @@ void GL::validateProgramEx(UInt program)
 	{
 		std::vector<char> log(static_cast<size_t>(logLength + 1), 0);
 		getProgramInfoLog(program, logLength, NULL, &log[0]);
-
-		std::stringstream ss;
-		ss << "glValidateProgram(" << program << "): " << &log[0];
-		GL::PRINT_WARNING(ss.str());
+		Log::warn() << "glValidateProgram(" << program << "): " << &log[0];
 	}
 }

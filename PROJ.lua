@@ -1,6 +1,10 @@
 
 SUBPROJECT("gl_wrappers")
 
+if not HAS_SUBPROJECT("cxx-util") then
+	error("This library depends on the 'cxx-util' library.")
+end
+
 DEFINES {
 	"GL_H=\"" .. CURRENT_SOURCE_DIR .. "/gl.h\"",
 	"GL_ERROR_H=\"" .. CURRENT_SOURCE_DIR .. "/gl_error.h\"",
@@ -8,7 +12,6 @@ DEFINES {
 	"GL_PROGRAM_H=\"" .. CURRENT_SOURCE_DIR .. "/gl_program.h\"",
 	"GL_SHADER_H=\"" .. CURRENT_SOURCE_DIR .. "/gl_shader.h\"",
 	"GL_TEXTURE_H=\"" .. CURRENT_SOURCE_DIR .. "/gl_texture.h\"",
-	"GL_UTIL_H=\"" .. CURRENT_SOURCE_DIR .. "/gl_util.h\"",
 	"GL_VERTEX_ATTRIB_POINTER_H=\"" .. CURRENT_SOURCE_DIR .. "/gl_vertex_attrib_pointer.h\"",
 }
 
@@ -31,6 +34,5 @@ SOURCE_FILES {
 	"gl_shader.h",
 	"gl_texture.cpp",
 	"gl_texture.h",
-	"gl_util.h",
 	"gl_vertex_attrib_pointer.h",
 }

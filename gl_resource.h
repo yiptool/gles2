@@ -25,8 +25,8 @@
 
 #include "gl_ptr.h"
 #include "gl_ptr_weak.h"
-#include "gl_util.h"
 #include <string>
+#include UNORDERED_H
 
 class GLPtrWeakBase;
 class GLResourceManager;
@@ -49,7 +49,9 @@ protected:
 	virtual void deleteThis();
 
 private:
-	GL_UNORDERED_SET<GLPtrWeakBase *> m_WeakPtrs;
+	typedef UNORDERED_SET<GLPtrWeakBase *> WeakPtrsSet;
+
+	WeakPtrsSet m_WeakPtrs;
 	int m_RefCount;
 	std::string m_Name;
 

@@ -32,7 +32,7 @@ GLResource::GLResource(const std::string & resName)
 GLResource::~GLResource()
 {
 	assert(m_RefCount == 0);
-	for (GL_UNORDERED_SET<GLPtrWeakBase *>::const_iterator it = m_WeakPtrs.begin(); it != m_WeakPtrs.end(); ++it)
+	for (WeakPtrsSet::const_iterator it = m_WeakPtrs.begin(); it != m_WeakPtrs.end(); ++it)
 		(*it)->m_Resource = NULL;
 }
 

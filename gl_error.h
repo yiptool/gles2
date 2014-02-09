@@ -26,12 +26,7 @@
 #include "gl.h"
 #include <sstream>
 #include <string>
-
-namespace GL
-{
-	extern void (* PRINT_WARNING)(const std::string & message);
-	extern void (* PRINT_ERROR)(const std::string & message);
-}
+#include LOGGER_H
 
 #ifdef NDEBUG
  #define CHECK_GL_LOCATION(name, var, location)
@@ -50,21 +45,13 @@ namespace GL
  #define CHECK_GL_LOCATION(name, var, location) \
 	{ \
 		if (location < 0) \
-		{ \
-			std::stringstream ss; \
-			ss << #name << "(\"" << var << "\") returned " << location << '.'; \
-			GL::PRINT_WARNING(ss.str()); \
-		} \
+			Log::warn() << #name << "(\"" << var << "\") returned " << location << '.'; \
 	}
  #define CHECK_GL_ERROR_(name, params) \
 	{ \
 		Enum err = GL::getError(); \
 		if (err != GL::NO_ERROR) \
-		{ \
-			std::stringstream ss; \
-			ss << #name << '(' << params << "): " << err << '.'; \
-			GL::PRINT_ERROR(ss.str()); \
-		} \
+			Log::error() << #name << '(' << params << "): " << err << '.'; \
 	}
  #define CHECK_GL_ERROR0(name) CHECK_GL_ERROR_(name, "")
  #define CHECK_GL_ERROR1(name, p) CHECK_GL_ERROR_(name, p)

@@ -26,10 +26,7 @@
 #include <string>
 #include <vector>
 #include <cstddef>
-
-#ifndef _MSC_VER
- #include <stdint.h>
-#endif
+#include TYPES_H
 
 #ifdef FALSE
  #undef FALSE
@@ -63,25 +60,18 @@ namespace GL
 	typedef char Char;
 	typedef unsigned char Boolean;
 	typedef unsigned int Bitfield;
+	typedef int8 Byte;
+	typedef uint8 UByte;
 	typedef short Short;
 	typedef int Int;
 	typedef int Sizei;
 	typedef unsigned short UShort;
 	typedef unsigned int UInt;
+	typedef int32 Fixed;
 	typedef float Float;
 	typedef float Clampf;
 	typedef ptrdiff_t Intptr;
 	typedef ptrdiff_t Sizeiptr;
-
-  #ifdef _MSC_VER
-	typedef signed __int8 Byte;
-	typedef unsigned __int8 UByte;
-	typedef signed __int32 Fixed;
-  #else
-	typedef int8_t Byte;
-	typedef uint8_t UByte;
-	typedef int32_t Fixed;
-  #endif
 
 	typedef std::string (* PFNLOADSHADERPROC)(const std::string & name);
 

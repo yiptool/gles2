@@ -26,8 +26,14 @@
 #include "gl_texture.h"
 #include "gl_shader.h"
 #include "gl_program.h"
-#include "gl_util.h"
 #include <vector>
+#include UNORDERED_H
+
+namespace GL
+{
+	typedef std::pair<GL::Enum, std::string> ShaderMapKey;
+	UNORDERED_HASH_FUNC(ShaderMapKeyHasher, return UNORDERED_HASH<std::string>()(value.second))
+}
 
 class GLResourceManager
 {
@@ -47,24 +53,9 @@ public:
 	GLProgramPtr getProgram(const std::string & name, bool * isNew);
 
 private:
-	typedef std::pair<GL::Enum, std::string> ShaderMapKey;
-
-  #ifndef GL_UNORDERED_MAP_HASH
-	typedef GL_UNORDERED_MAP<ShaderMapKey, GLShaderWeakPtr> ShaderMap;
-  #else
-	struct ShaderMapKeyHasher
-	{
-		static const size_t bucket_size = 4;
-		static const size_t min_buckets = 8;
-		inline bool operator()(const ShaderMapKey & k1, const ShaderMapKey & k2) const { return k1 < k2; }
-		inline size_t operator()(const ShaderMapKey & v) const
-			{ return GL_UNORDERED_MAP_HASH<std::string>()(v.second); }
-	};
-	typedef GL_UNORDERED_MAP<ShaderMapKey, GLShaderWeakPtr, ShaderMapKeyHasher> ShaderMap;
-  #endif
-
-	typedef GL_UNORDERED_MAP<std::string, GLTextureWeakPtr> TextureMap;
-	typedef GL_UNORDERED_MAP<std::string, GLProgramWeakPtr> ProgramMap;
+	typedef UNORDERED_MAP<std::string, GLTextureWeakPtr> TextureMap;
+	typedef UNORDERED_MAP<std::string, GLProgramWeakPtr> ProgramMap;
+	typedef UNORDERED_MAP<GL::ShaderMapKey, GLShaderWeakPtr, GL::ShaderMapKeyHasher> ShaderMap;
 	typedef std::vector<GLResourceWeakPtr> ResourceList;
 
 	static const std::string m_DefaultTextureName;
