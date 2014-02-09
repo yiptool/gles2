@@ -37,7 +37,7 @@ public:
 	inline GL::UInt handle() const { return m_Handle; }
 
 protected:
-	GLShader(const std::string & resName, GL::Enum type);
+	GLShader(const std::string & resName, GL::Enum shaderType);
 	GLShader(const std::pair<GL::Enum, std::string> & pair);
 	~GLShader();
 

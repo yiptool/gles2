@@ -26,10 +26,10 @@
 #include <iomanip>
 #include <stdexcept>
 
-GLShader::GLShader(const std::string & resName, GL::Enum type)
+GLShader::GLShader(const std::string & resName, GL::Enum shaderType)
 	: GLResource(resName),
 	  m_Handle(0),
-	  m_Type(type)
+	  m_Type(shaderType)
 {
 	m_Handle = GL::createShader(m_Type);
 }

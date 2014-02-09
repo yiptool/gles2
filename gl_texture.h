@@ -36,9 +36,9 @@ public:
 	int width() const { return m_Width; }
 	int height() const { return m_Height; }
 
-	inline void setSize(int width, int height) { m_Width = width; m_Height = height; }
-	inline void setWidth(int width) { m_Width = width; }
-	inline void setHeight(int height) { m_Height = height; }
+	inline void setSize(int w, int h) { m_Width = w; m_Height = h; }
+	inline void setWidth(int w) { m_Width = w; }
+	inline void setHeight(int h) { m_Height = h; }
 
 protected:
 	GLTexture(const std::string & resName);
