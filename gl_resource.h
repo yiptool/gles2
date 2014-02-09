@@ -26,6 +26,7 @@
 #include "gl_ptr.h"
 #include "gl_ptr_weak.h"
 #include <string>
+#include <cassert>
 #include UNORDERED_H
 
 class GLPtrWeakBase;
