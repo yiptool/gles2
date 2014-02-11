@@ -90,7 +90,7 @@ void GL::blendColor(Clampf red, Clampf green, Clampf blue, Clampf alpha)
 void GL::blendEquation(Enum mode)
 {
 	assert(g_OpenGLFunctions);
-	glBlendEquation(mode);
+	g_OpenGLFunctions->glBlendEquation(mode);
 	CHECK_GL_ERROR1(glBlendEquation, mode);
 }
 

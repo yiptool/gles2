@@ -39,7 +39,7 @@ class GLResourceManager
 {
 public:
 	GLResourceManager();
-	~GLResourceManager();
+	virtual ~GLResourceManager();
 
 	virtual void collectGarbage();
 

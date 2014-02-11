@@ -49,7 +49,7 @@
 	}
  #define CHECK_GL_ERROR_(name, params) \
 	{ \
-		Enum err = GL::getError(); \
+		GL::Enum err = GL::getError(); \
 		if (err != GL::NO_ERROR) \
 			Log::error() << #name << '(' << params << "): " << err << '.'; \
 	}

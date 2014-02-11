@@ -28,12 +28,23 @@
 #include <cstddef>
 #include TYPES_H
 
+#ifdef _WIN32
+ #ifndef WIN32_LEAN_AND_MEAN
+  #define WIN32_LEAN_AND_MEAN
+ #endif
+ #include <windows.h>
+#endif
+
 #ifdef FALSE
  #undef FALSE
 #endif
 
 #ifdef TRUE
  #undef TRUE
+#endif
+
+#ifdef NO_ERROR
+ #undef NO_ERROR
 #endif
 
 class GLResourceManager;
