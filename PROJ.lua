@@ -8,6 +8,7 @@ end
 DEFINES {
 	"GL_H=\"" .. CURRENT_SOURCE_DIR .. "/gl.h\"",
 	"GL_ERROR_H=\"" .. CURRENT_SOURCE_DIR .. "/gl_error.h\"",
+	"GL_RESOURCE_H=\"" .. CURRENT_SOURCE_DIR .. "/gl_resource.h\"",
 	"GL_RESOURCE_MANAGER_H=\"" .. CURRENT_SOURCE_DIR .. "/gl_resource_manager.h\"",
 	"GL_PROGRAM_H=\"" .. CURRENT_SOURCE_DIR .. "/gl_program.h\"",
 	"GL_SHADER_H=\"" .. CURRENT_SOURCE_DIR .. "/gl_shader.h\"",
