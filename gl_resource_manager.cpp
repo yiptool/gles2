@@ -63,7 +63,7 @@ GLTexturePtr GLResourceManager::createTexture(const std::string & name)
 
 GLTexturePtr GLResourceManager::getTexture(const std::string & name, bool * isNew)
 {
-	return getResource<GLTexture>(m_Textures, name, isNew);
+	return getRes<GLTexture>(m_Textures, name, isNew);
 }
 
 GLShaderPtr GLResourceManager::createShader(GL::Enum type, const std::string & name)
@@ -75,7 +75,7 @@ GLShaderPtr GLResourceManager::createShader(GL::Enum type, const std::string & n
 
 GLShaderPtr GLResourceManager::getShader(GL::Enum type, const std::string & name, bool * isNew)
 {
-	return getResource<GLShader>(m_Shaders, std::make_pair(type, name), isNew);
+	return getRes<GLShader>(m_Shaders, std::make_pair(type, name), isNew);
 }
 
 GLProgramPtr GLResourceManager::createProgram(const std::string & name)
@@ -87,10 +87,10 @@ GLProgramPtr GLResourceManager::createProgram(const std::string & name)
 
 GLProgramPtr GLResourceManager::getProgram(const std::string & name, bool * isNew)
 {
-	return getResource<GLProgram>(m_Programs, name, isNew);
+	return getRes<GLProgram>(m_Programs, name, isNew);
 }
 
-template <class T, class M, class K> GLPtr<T> GLResourceManager::getResource(M & map, const K & key, bool * isNew)
+template <class T, class M, class K> StrongPtr<T> GLResourceManager::getRes(M & map, const K & key, bool * isNew)
 {
 	typename M::iterator it = map.find(key);
 	if (it != map.end() && !it->second.isNull())
@@ -104,7 +104,7 @@ template <class T, class M, class K> GLPtr<T> GLResourceManager::getResource(M &
 		if (isNew)
 			*isNew = true;
 
-		GLPtr<T> resource = new T(key);
+		StrongPtr<T> resource = new T(key);
 		if (it != map.end())
 			it->second = resource;
 		else

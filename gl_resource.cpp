@@ -21,22 +21,12 @@
 // THE SOFTWARE.
 //
 #include "gl_resource.h"
-#include "gl_ptr_weak.h"
 
 GLResource::GLResource(const std::string & resName)
-	: m_RefCount(0),
-	  m_Name(resName)
+	: m_Name(resName)
 {
 }
 
 GLResource::~GLResource()
 {
-	assert(m_RefCount == 0);
-	for (WeakPtrsSet::const_iterator it = m_WeakPtrs.begin(); it != m_WeakPtrs.end(); ++it)
-		(*it)->m_Resource = NULL;
-}
-
-void GLResource::deleteThis()
-{
-	delete this;
 }

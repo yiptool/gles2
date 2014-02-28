@@ -57,7 +57,7 @@ private:
 	friend class GLResourceManager;
 };
 
-typedef GLPtr<GLTexture> GLTexturePtr;
-typedef GLWeakPtr<GLTexture> GLTextureWeakPtr;
+typedef StrongPtr<GLTexture> GLTexturePtr;
+typedef WeakPtr<GLTexture> GLTextureWeakPtr;
 
 #endif

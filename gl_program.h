@@ -57,7 +57,7 @@ private:
 	friend class GLResourceManager;
 };
 
-typedef GLPtr<GLProgram> GLProgramPtr;
-typedef GLWeakPtr<GLProgram> GLProgramWeakPtr;
+typedef StrongPtr<GLProgram> GLProgramPtr;
+typedef WeakPtr<GLProgram> GLProgramWeakPtr;
 
 #endif

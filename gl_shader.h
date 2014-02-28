@@ -54,7 +54,7 @@ private:
 	friend class GLResourceManager;
 };
 
-typedef GLPtr<GLShader> GLShaderPtr;
-typedef GLWeakPtr<GLShader> GLShaderWeakPtr;
+typedef StrongPtr<GLShader> GLShaderPtr;
+typedef WeakPtr<GLShader> GLShaderWeakPtr;
 
 #endif

@@ -67,7 +67,7 @@ private:
 	ShaderMap m_Shaders;
 	ProgramMap m_Programs;
 
-	template <class T, class M, class K> GLPtr<T> getResource(M & map, const K & key, bool * isNew);
+	template <class T, class M, class K> StrongPtr<T> getRes(M & map, const K & key, bool * isNew);
 	template <class M> void collectGarbageInMap(M & map);
 
 	GLResourceManager(const GLResourceManager &);
