@@ -2,7 +2,7 @@
 GLWrappers
 ==========
 
-This is the convenient library for cross-platform OpenGL programming.
+This is the convenient library for cross-platform OpenGL ES 2.0 programming.
 
 
 Building
