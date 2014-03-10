@@ -32,31 +32,25 @@ GLResourceManager::GLResourceManager()
 
 GLResourceManager::~GLResourceManager()
 {
-	for (ResourceList::const_iterator it = m_AllResources.begin(); it != m_AllResources.end(); ++it)
+	for (const GLResourceWeakPtr & resourceWeakPtr : m_AllResources)
 	{
-		if (!it->isNull())
-			it->get()->destroy();
+		std::shared_ptr<GLResource> resource = resourceWeakPtr.lock();
+		if (resource)
+			resource->destroy();
 	}
 }
 
 void GLResourceManager::collectGarbage()
 {
-	for (ResourceList::iterator it = m_AllResources.begin(); it != m_AllResources.end(); )
-	{
-		if (!it->isNull())
-			++it;
-		else
-			it = m_AllResources.erase(it);
-	}
-
-	collectGarbageInMap(m_Textures);
-	collectGarbageInMap(m_Shaders);
-	collectGarbageInMap(m_Programs);
+	collectGarbageIn(m_Textures);
+	collectGarbageIn(m_Shaders);
+	collectGarbageIn(m_Programs);
+	collectGarbageIn(m_AllResources);
 }
 
 GLTexturePtr GLResourceManager::createTexture(const std::string & name)
 {
-	GLTexturePtr texture = new GLTexture(name);
+	GLTexturePtr texture = std::make_shared<GLTexture>(name);
 	m_AllResources.push_back(texture);
 	return texture;
 }
@@ -68,7 +62,7 @@ GLTexturePtr GLResourceManager::getTexture(const std::string & name, bool * isNe
 
 GLShaderPtr GLResourceManager::createShader(GL::Enum type, const std::string & name)
 {
-	GLShaderPtr shader = new GLShader(name, type);
+	GLShaderPtr shader = std::make_shared<GLShader>(name, type);
 	m_AllResources.push_back(shader);
 	return shader;
 }
@@ -80,7 +74,7 @@ GLShaderPtr GLResourceManager::getShader(GL::Enum type, const std::string & name
 
 GLProgramPtr GLResourceManager::createProgram(const std::string & name)
 {
-	GLProgramPtr program = new GLProgram(name);
+	GLProgramPtr program = std::make_shared<GLProgram>(name);
 	m_AllResources.push_back(program);
 	return program;
 }
@@ -90,21 +84,22 @@ GLProgramPtr GLResourceManager::getProgram(const std::string & name, bool * isNe
 	return getRes<GLProgram>(m_Programs, name, isNew);
 }
 
-template <class T, class M, class K> StrongPtr<T> GLResourceManager::getRes(M & map, const K & key, bool * isNew)
+template <class T, class M, class K> std::shared_ptr<T> GLResourceManager::getRes(M & map, const K & key, bool * isNew)
 {
+	std::shared_ptr<T> result;
 	typename M::iterator it = map.find(key);
-	if (it != map.end() && !it->second.isNull())
+	if (it != map.end() && (result = it->second.lock()))
 	{
 		if (isNew)
 			*isNew = false;
-		return it->second.get();
+		return result;
 	}
 	else
 	{
 		if (isNew)
 			*isNew = true;
 
-		StrongPtr<T> resource = new T(key);
+		std::shared_ptr<T> resource = std::make_shared<T>(key);
 		if (it != map.end())
 			it->second = resource;
 		else
@@ -114,13 +109,23 @@ template <class T, class M, class K> StrongPtr<T> GLResourceManager::getRes(M & 
 	}
 }
 
-template <class M> void GLResourceManager::collectGarbageInMap(M & map)
+template <class T> static bool expired(const std::weak_ptr<T> & ptr)
 {
-	for (typename M::iterator it = map.begin(); it != map.end(); )
+	return ptr.expired();
+}
+
+template <class T1, class T2> static bool expired(const std::pair<T1, T2> & pair)
+{
+	return pair.second.expired();
+}
+
+template <class T> void GLResourceManager::collectGarbageIn(T & collection)
+{
+	for (auto it = collection.begin(); it != collection.end(); )
 	{
-		if (!it->second.isNull())
+		if (!expired(*it))
 			++it;
 		else
-			it = map.erase(it);
+			it = collection.erase(it);
 	}
 }

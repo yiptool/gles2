@@ -25,31 +25,12 @@
 
 #include <string>
 #include <cassert>
-#include UNORDERED_H
-#include REF_COUNTED_OBJECT_H
-#include WEAK_PTR_H
-#include STRONG_PTR_H
-
-#ifdef RTTI_OBJECT_H
- #include RTTI_OBJECT_H
- #include RTTI_META_OBJECT_H
-#endif
+#include <memory>
 
 class GLResourceManager;
 
 class GLResource
-  #ifdef RTTI_OBJECT_H
-	: public RTTI::Object
-  #else
-	: public RefCountedObject
-  #endif
 {
-  #ifdef RTTI_OBJECT_H
-	RTTI_OBJECT(GLResource)
-		RTTI_PARENT_CLASS(RTTI::Object)
-	END_RTTI_OBJECT
-  #endif
-
 public:
 	inline const std::string & name() const { return m_Name; }
 
@@ -68,7 +49,7 @@ private:
 	friend class GLResourceManager;
 };
 
-typedef StrongPtr<GLResource> GLResourcePtr;
-typedef WeakPtr<GLResource> GLResourceWeakPtr;
+typedef std::shared_ptr<GLResource> GLResourcePtr;
+typedef std::weak_ptr<GLResource> GLResourceWeakPtr;
 
 #endif

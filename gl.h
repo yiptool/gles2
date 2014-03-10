@@ -26,7 +26,7 @@
 #include <string>
 #include <vector>
 #include <cstddef>
-#include TYPES_H
+#include <cstdint>
 
 #ifdef _WIN32
  #ifndef WIN32_LEAN_AND_MEAN
@@ -71,14 +71,14 @@ namespace GL
 	typedef char Char;
 	typedef unsigned char Boolean;
 	typedef unsigned int Bitfield;
-	typedef int8 Byte;
-	typedef uint8 UByte;
+	typedef int8_t Byte;
+	typedef uint8_t UByte;
 	typedef short Short;
 	typedef int Int;
 	typedef int Sizei;
 	typedef unsigned short UShort;
 	typedef unsigned int UInt;
-	typedef int32 Fixed;
+	typedef int32_t Fixed;
 	typedef float Float;
 	typedef float Clampf;
 	typedef ptrdiff_t Intptr;

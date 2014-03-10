@@ -25,27 +25,59 @@
 
 #include "gl.h"
 
-class GLVertexAttribPointer
+namespace GL
 {
-public:
-	inline GLVertexAttribPointer(GL::UInt index, GL::Int size, GL::Enum type, GL::Boolean normalized,
-			GL::Sizei stride, const void * p)
-		: m_Index(index)
+	/**
+	 * RAII-style class for GL::enableVertexAttribArray and GL::disableVertexAttribArray.
+	 * This class allows convenient and exception-safe initialization and use of vertex attrib arrays.
+	 *
+	 * It is recommended to create an instance of this class instead of calling GL::vertexAttribPointer,
+	 * GL::enableVertexAttribArray and GL::disableVertexAttribArray:
+	 * @code
+	 * GL::VertexAttribPointer vertices(verticesIndex, 3, GL::FLOAT, GL::FALSE, 0, vertices);
+	 * GL::VertexAttribPointer texCoords(texCoordsIndex, 2, GL::FLOAT, GL::FALSE, 0, texCoords);
+	 * GL::drawArrays(GL::TRIANGLE_STRIP, 0, 4);
+	 * @endcode
+	 */
+	class VertexAttribPointer
 	{
-		GL::vertexAttribPointer(m_Index, size, type, normalized, stride, p);
-		GL::enableVertexAttribArray(m_Index);
-	}
+	public:
+		/**
+		 * Constructor.
+		 * Calls GL::vertexAttribPointer and GL::enableVertexAttribArray.
+		 * Parameters are the same as those of GL::vertexAttribPointer.
+		 * @param index Index of the generic vertex attribute to be modified.
+		 * @param size Number of components per generic vertex attribute. Must be 1, 2, 3 or 4.
+		 * @param type Data type of each component in the array. Symbolic constants GL::BYTE, GL::UNSIGNED_BYTE,
+		 * GL::SHORT, GL::UNSIGNED_SHORT, GL::FIXED or GL::FLOAT are accepted.
+		 * @param normalized Specifies whether fixed-point data values should be normalized (GL::TRUE) or
+		 * converted directly as fixed-point values (GL::FALSE) when they are accessed.
+		 * @param stride Byte offset between consecutive generic vertex attributes. If *stride* is 0, the generic
+		 * vertex attributes are understood to be tightly packed in the array.
+		 * @param pointer Specifies a pointer to the first component of the first generic vertex attribute in the
+		 * array.
+		 * @see GL::vertexAttribPointer, GL::enableVertexAttribArray, GL::disableVertexAttribArray.
+		 */
+		inline VertexAttribPointer(UInt index, Int size, Enum type, Boolean normalized, Sizei stride,
+				const void * pointer)
+			: m_Index(index)
+		{
+			vertexAttribPointer(m_Index, size, type, normalized, stride, pointer);
+			enableVertexAttribArray(m_Index);
+		}
 
-	inline ~GLVertexAttribPointer()
-	{
-		GL::disableVertexAttribArray(m_Index);
-	}
+		/** Destructor. Calls GL::disableVertexAttribArray. */
+		inline ~VertexAttribPointer()
+		{
+			disableVertexAttribArray(m_Index);
+		}
 
-private:
-	GL::UInt m_Index;
+	private:
+		GL::UInt m_Index;
 
-	GLVertexAttribPointer(const GLVertexAttribPointer &);
-	GLVertexAttribPointer & operator=(const GLVertexAttribPointer &);
-};
+		VertexAttribPointer(const VertexAttribPointer &) = delete;
+		VertexAttribPointer & operator=(const GLVertexAttribPointer &) = delete;
+	};
+}
 
 #endif

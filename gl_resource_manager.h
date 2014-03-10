@@ -27,12 +27,15 @@
 #include "gl_shader.h"
 #include "gl_program.h"
 #include <vector>
-#include UNORDERED_H
+#include <unordered_map>
 
 namespace GL
 {
 	typedef std::pair<GL::Enum, std::string> ShaderMapKey;
-	UNORDERED_HASH_FUNC(ShaderMapKeyHasher, return UNORDERED_HASH<std::string>()(value.second))
+	struct ShaderMapKeyHash {
+		inline size_t operator()(const GL::ShaderMapKey & value) const
+			{ return std::hash<std::string>()(value.second); }
+	};
 }
 
 class GLResourceManager
@@ -53,9 +56,9 @@ public:
 	GLProgramPtr getProgram(const std::string & name, bool * isNew);
 
 private:
-	typedef UNORDERED_MAP<std::string, GLTextureWeakPtr> TextureMap;
-	typedef UNORDERED_MAP<std::string, GLProgramWeakPtr> ProgramMap;
-	typedef UNORDERED_MAP<GL::ShaderMapKey, GLShaderWeakPtr, GL::ShaderMapKeyHasher> ShaderMap;
+	typedef std::unordered_map<std::string, GLTextureWeakPtr> TextureMap;
+	typedef std::unordered_map<std::string, GLProgramWeakPtr> ProgramMap;
+	typedef std::unordered_map<GL::ShaderMapKey, GLShaderWeakPtr, GL::ShaderMapKeyHash> ShaderMap;
 	typedef std::vector<GLResourceWeakPtr> ResourceList;
 
 	static const std::string m_DefaultTextureName;
@@ -67,8 +70,8 @@ private:
 	ShaderMap m_Shaders;
 	ProgramMap m_Programs;
 
-	template <class T, class M, class K> StrongPtr<T> getRes(M & map, const K & key, bool * isNew);
-	template <class M> void collectGarbageInMap(M & map);
+	template <class T, class M, class K> std::shared_ptr<T> getRes(M & map, const K & key, bool * isNew);
+	template <class T> void collectGarbageIn(T & collection);
 
 	GLResourceManager(const GLResourceManager &);
 	GLResourceManager & operator=(const GLResourceManager &);

@@ -40,7 +40,7 @@ public:
 	inline void setWidth(int w) { m_Width = w; }
 	inline void setHeight(int h) { m_Height = h; }
 
-protected:
+//protected:
 	GLTexture(const std::string & resName);
 	~GLTexture();
 
@@ -57,7 +57,7 @@ private:
 	friend class GLResourceManager;
 };
 
-typedef StrongPtr<GLTexture> GLTexturePtr;
-typedef WeakPtr<GLTexture> GLTextureWeakPtr;
+typedef std::shared_ptr<GLTexture> GLTexturePtr;
+typedef std::weak_ptr<GLTexture> GLTextureWeakPtr;
 
 #endif

@@ -36,7 +36,7 @@ public:
 	inline GL::Enum type() const { return m_Type; }
 	inline GL::UInt handle() const { return m_Handle; }
 
-protected:
+//protected:
 	GLShader(const std::string & resName, GL::Enum shaderType);
 	GLShader(const std::pair<GL::Enum, std::string> & pair);
 	~GLShader();
@@ -54,7 +54,7 @@ private:
 	friend class GLResourceManager;
 };
 
-typedef StrongPtr<GLShader> GLShaderPtr;
-typedef WeakPtr<GLShader> GLShaderWeakPtr;
+typedef std::shared_ptr<GLShader> GLShaderPtr;
+typedef std::weak_ptr<GLShader> GLShaderWeakPtr;
 
 #endif

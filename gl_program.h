@@ -42,7 +42,7 @@ public:
 
 	inline void use() { GL::useProgram(m_Handle); }
 
-protected:
+//protected:
 	GLProgram(const std::string & resName);
 	~GLProgram();
 
@@ -57,7 +57,7 @@ private:
 	friend class GLResourceManager;
 };
 
-typedef StrongPtr<GLProgram> GLProgramPtr;
-typedef WeakPtr<GLProgram> GLProgramWeakPtr;
+typedef std::shared_ptr<GLProgram> GLProgramPtr;
+typedef std::weak_ptr<GLProgram> GLProgramWeakPtr;
 
 #endif
