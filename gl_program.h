@@ -27,37 +27,81 @@
 #include "gl_resource.h"
 #include "gl.h"
 
-class GLResourceManager;
-
-class GLProgram : public GLResource
+namespace GL
 {
-public:
-	inline GL::UInt handle() const { return m_Handle; }
+	class ResourceManager;
 
-	void attachShader(const GLShaderPtr & shader);
-	void detachShader(const GLShaderPtr & shader);
+	/** OpenGL ES program. */
+	class Program : public Resource
+	{
+	public:
+		/**
+		 * Returns raw OpenGL ES handle of the program.
+		 * @return Raw handle of the program.
+		 */
+		inline UInt handle() const { return m_Handle; }
 
-	inline void link() { GL::linkProgramEx(m_Handle); }
-	inline void validate() { GL::validateProgramEx(m_Handle); }
+		/**
+		 * Attaches shader to the program.
+		 * This is equivalent to GL::attachShader.
+		 * @param shader %Shader to attach.
+		 */
+		inline void attachShader(const ShaderPtr & shader) { GL::attachShader(m_Handle, shader->m_Handle); }
 
-	inline void use() { GL::useProgram(m_Handle); }
+		/**
+		 * Detaches shader from the program.
+		 * This is equivalent to GL::detachShader.
+		 * @param shader %Shader to detach.
+		 */
+		inline void detachShader(const ShaderPtr & shader) { GL::detachShader(m_Handle, shader->m_Handle); }
 
-//protected:
-	GLProgram(const std::string & resName);
-	~GLProgram();
+		/**
+		 * Links the program.
+		 * This is equivalent to GL::linkProgramEx.
+		 */
+		inline void link() { GL::linkProgramEx(m_Handle); }
 
-	void destroy();
+		/**
+		 * Checks whether this program may be run with the current OpenGL state.
+		 * This is equivalent to GL::validateProgramEx.
+		 */
+		inline void validate() { GL::validateProgramEx(m_Handle); }
 
-private:
-	GL::UInt m_Handle;
+		/**
+		 * Binds program into the OpenGL context.
+		 * This is equivalent to GL::useProgram.
+		 */
+		inline void use() { GL::useProgram(m_Handle); }
 
-	GLProgram(const GLProgram &);
-	GLProgram & operator=(const GLProgram &);
+//	protected:
+		/**
+		 * Constructor.
+		 * @param resName Name of the program resource.
+		 */
+		Program(const std::string & resName);
 
-	friend class GLResourceManager;
-};
+		/** Destructor. */
+		~Program();
 
-typedef std::shared_ptr<GLProgram> GLProgramPtr;
-typedef std::weak_ptr<GLProgram> GLProgramWeakPtr;
+		/**
+		 * Releases the associated OpenGL program.
+		 * This is equivalent to GL::deleteProgram.
+		 */
+		void destroy();
+
+	private:
+		UInt m_Handle;
+
+		Program(const Program &) = delete;
+		Program & operator=(const Program &) = delete;
+
+		friend class ResourceManager;
+	};
+
+	/** Strong pointer to the OpenGL program. */
+	typedef std::shared_ptr<Program> ProgramPtr;
+	/** Weak pointer to the OpenGL program. */
+	typedef std::weak_ptr<Program> ProgramWeakPtr;
+}
 
 #endif

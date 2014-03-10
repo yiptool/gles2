@@ -22,25 +22,25 @@
 //
 #include "gl_resource_manager.h"
 
-const std::string GLResourceManager::m_DefaultTextureName = "<texture>";
-const std::string GLResourceManager::m_DefaultShaderName = "<shader>";
-const std::string GLResourceManager::m_DefaultProgramName = "<program>";
+const std::string GL::ResourceManager::m_DefaultTextureName = "<texture>";
+const std::string GL::ResourceManager::m_DefaultShaderName = "<shader>";
+const std::string GL::ResourceManager::m_DefaultProgramName = "<program>";
 
-GLResourceManager::GLResourceManager()
+GL::ResourceManager::ResourceManager()
 {
 }
 
-GLResourceManager::~GLResourceManager()
+GL::ResourceManager::~ResourceManager()
 {
-	for (const GLResourceWeakPtr & resourceWeakPtr : m_AllResources)
+	for (const ResourceWeakPtr & resourceWeakPtr : m_AllResources)
 	{
-		std::shared_ptr<GLResource> resource = resourceWeakPtr.lock();
+		std::shared_ptr<Resource> resource = resourceWeakPtr.lock();
 		if (resource)
 			resource->destroy();
 	}
 }
 
-void GLResourceManager::collectGarbage()
+void GL::ResourceManager::collectGarbage()
 {
 	collectGarbageIn(m_Textures);
 	collectGarbageIn(m_Shaders);
@@ -48,43 +48,43 @@ void GLResourceManager::collectGarbage()
 	collectGarbageIn(m_AllResources);
 }
 
-GLTexturePtr GLResourceManager::createTexture(const std::string & name)
+GLTexturePtr GL::ResourceManager::createTexture(const std::string & name)
 {
 	GLTexturePtr texture = std::make_shared<GLTexture>(name);
 	m_AllResources.push_back(texture);
 	return texture;
 }
 
-GLTexturePtr GLResourceManager::getTexture(const std::string & name, bool * isNew)
+GLTexturePtr GL::ResourceManager::getTexture(const std::string & name, bool * isNew)
 {
 	return getRes<GLTexture>(m_Textures, name, isNew);
 }
 
-GLShaderPtr GLResourceManager::createShader(GL::Enum type, const std::string & name)
+GL::ShaderPtr GL::ResourceManager::createShader(GL::Enum type, const std::string & name)
 {
-	GLShaderPtr shader = std::make_shared<GLShader>(name, type);
+	ShaderPtr shader = std::make_shared<Shader>(name, type);
 	m_AllResources.push_back(shader);
 	return shader;
 }
 
-GLShaderPtr GLResourceManager::getShader(GL::Enum type, const std::string & name, bool * isNew)
+GL::ShaderPtr GL::ResourceManager::getShader(GL::Enum type, const std::string & name, bool * isNew)
 {
-	return getRes<GLShader>(m_Shaders, std::make_pair(type, name), isNew);
+	return getRes<Shader>(m_Shaders, std::make_pair(type, name), isNew);
 }
 
-GLProgramPtr GLResourceManager::createProgram(const std::string & name)
+GL::ProgramPtr GL::ResourceManager::createProgram(const std::string & name)
 {
-	GLProgramPtr program = std::make_shared<GLProgram>(name);
+	ProgramPtr program = std::make_shared<Program>(name);
 	m_AllResources.push_back(program);
 	return program;
 }
 
-GLProgramPtr GLResourceManager::getProgram(const std::string & name, bool * isNew)
+GL::ProgramPtr GL::ResourceManager::getProgram(const std::string & name, bool * isNew)
 {
-	return getRes<GLProgram>(m_Programs, name, isNew);
+	return getRes<Program>(m_Programs, name, isNew);
 }
 
-template <class T, class M, class K> std::shared_ptr<T> GLResourceManager::getRes(M & map, const K & key, bool * isNew)
+template <class T, class M, class K> std::shared_ptr<T> GL::ResourceManager::getRes(M & map, const K & key, bool * isNew)
 {
 	std::shared_ptr<T> result;
 	typename M::iterator it = map.find(key);
@@ -119,7 +119,7 @@ template <class T1, class T2> static bool expired(const std::pair<T1, T2> & pair
 	return pair.second.expired();
 }
 
-template <class T> void GLResourceManager::collectGarbageIn(T & collection)
+template <class T> void GL::ResourceManager::collectGarbageIn(T & collection)
 {
 	for (auto it = collection.begin(); it != collection.end(); )
 	{

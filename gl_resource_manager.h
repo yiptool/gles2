@@ -26,59 +26,120 @@
 #include "gl_texture.h"
 #include "gl_shader.h"
 #include "gl_program.h"
+#include <string>
 #include <vector>
 #include <unordered_map>
 
 namespace GL
 {
-	typedef std::pair<GL::Enum, std::string> ShaderMapKey;
-	struct ShaderMapKeyHash {
-		inline size_t operator()(const GL::ShaderMapKey & value) const
-			{ return std::hash<std::string>()(value.second); }
+	/** @cond */
+	namespace Internal
+	{
+		// Key for unordered_map of shaders
+		typedef std::pair<Enum, std::string> ShaderMapKey;
+		struct ShaderMapKeyHash {
+			inline size_t operator()(const ShaderMapKey & value) const
+				{ return std::hash<std::string>()(value.second); }
+		};
+	}
+	/** @endcond */
+
+	/**
+	 * Convenient manager of OpenGL resources.
+	 *
+	 * It is highly recommended that you call collectGarbage() periodically (e.g. once per frame)
+	 * so that resource manager could cleanup internal structures. Not calling this method will
+	 * result in negligible memory leaks.
+	 *
+	 * In this implementation resource manager does not cache resources in any way. Resources are
+	 * kept "alive" only while there is at least one ResourcePtr pointing to it.
+	 *
+	 * Custom caching could be implemented on top of this class by subclassing it.
+	 */
+	class ResourceManager
+	{
+	public:
+		/** Constructor. */
+		ResourceManager();
+
+		/** Destructor. */
+		virtual ~ResourceManager();
+
+		/**
+		 * Cleans up internal storage.
+		 * In default implementation this method cleans up internal tables from expired weak pointers.
+		 * This method could be overriden in child classes that implement caching of resources.
+		 */
+		virtual void collectGarbage();
+
+		GLTexturePtr createTexture(const std::string & name = m_DefaultTextureName);
+		GLTexturePtr getTexture(const std::string & name, bool * isNew);
+
+		/**
+		 * Creates new shader.
+		 * This method always creates a new shader, even if there is one with the same name in the resource
+		 * manager. Created shader is not registered within a manager.
+		 * @param type Type of the shader. Could be GL::VERTEX_SHADER or GL::FRAGMENT_SHADER.
+		 * @param name Name of the shader (optional). This is the name that will be returned by
+		 * GL::Resource::name().
+		 * @return Pointer to the shader.
+		 */
+		ShaderPtr createShader(Enum type, const std::string & name = m_DefaultShaderName);
+
+		/**
+		 * Loads shader with the specified name.
+		 * This method does not load a shader if it has already been loaded; in this case it returns
+		 * the cached shader.
+		 * @param type Type of the shader. Could be GL::VERTEX_SHADER or GL::FRAGMENT_SHADER.
+		 * @param name Name of the shader.
+		 * @param isNew Pointer to the variable where kind of the operation will be stored:
+		 * *true* means that shader has been loaded and *false* means that cached shader has been returned.
+		 * @return Pointer to the shader.
+		 */
+		ShaderPtr getShader(Enum type, const std::string & name, bool * isNew);
+
+		/**
+		 * Creates new program.
+		 * This method always creates a new program, even if there is one with the same name in the resource
+		 * manager. Created program is not registered within a manager.
+		 * @param name Name of the program (optional). This is the name that will be returned by
+		 * GL::Resource::name().
+		 * @return Pointer to the program.
+		 */
+		ProgramPtr createProgram(const std::string & name = m_DefaultProgramName);
+
+		/**
+		 * Loads program with the specified name.
+		 * This method does not load a shader if it has already been loaded; in this case it returns
+		 * the cached shader.
+		 * @param type Type of the shader. Could be GL::VERTEX_SHADER or GL::FRAGMENT_SHADER.
+		 * @param name Name of the shader.
+		 * @param isNew Pointer to the variable where kind of the operation will be stored:
+		 * *true* means that shader has been loaded and *false* means that cached shader has been returned.
+		 * @return Pointer to the shader.
+		 */
+		ProgramPtr getProgram(const std::string & name, bool * isNew);
+
+	private:
+		static const std::string m_DefaultTextureName;
+		static const std::string m_DefaultShaderName;
+		static const std::string m_DefaultProgramName;
+
+		std::vector<ResourceWeakPtr> m_AllResources;
+		std::unordered_map<std::string, GLTextureWeakPtr> m_Textures;
+		std::unordered_map<Internal::ShaderMapKey, ShaderWeakPtr, Internal::ShaderMapKeyHash> m_Shaders;
+		std::unordered_map<std::string, ProgramWeakPtr> m_Programs;
+
+		template <class T, class M, class K> std::shared_ptr<T> getRes(M & map, const K & key, bool * isNew);
+		template <class T> void collectGarbageIn(T & collection);
+
+		ResourceManager(const ResourceManager &);
+		ResourceManager & operator=(const ResourceManager &);
+
+		friend class Shader;
+		friend class Program;
+		friend class GLTexture;
 	};
 }
-
-class GLResourceManager
-{
-public:
-	GLResourceManager();
-	virtual ~GLResourceManager();
-
-	virtual void collectGarbage();
-
-	GLTexturePtr createTexture(const std::string & name = m_DefaultTextureName);
-	GLTexturePtr getTexture(const std::string & name, bool * isNew);
-
-	GLShaderPtr createShader(GL::Enum type, const std::string & name = m_DefaultShaderName);
-	GLShaderPtr getShader(GL::Enum type, const std::string & name, bool * isNew);
-
-	GLProgramPtr createProgram(const std::string & name = m_DefaultProgramName);
-	GLProgramPtr getProgram(const std::string & name, bool * isNew);
-
-private:
-	typedef std::unordered_map<std::string, GLTextureWeakPtr> TextureMap;
-	typedef std::unordered_map<std::string, GLProgramWeakPtr> ProgramMap;
-	typedef std::unordered_map<GL::ShaderMapKey, GLShaderWeakPtr, GL::ShaderMapKeyHash> ShaderMap;
-	typedef std::vector<GLResourceWeakPtr> ResourceList;
-
-	static const std::string m_DefaultTextureName;
-	static const std::string m_DefaultShaderName;
-	static const std::string m_DefaultProgramName;
-
-	ResourceList m_AllResources;
-	TextureMap m_Textures;
-	ShaderMap m_Shaders;
-	ProgramMap m_Programs;
-
-	template <class T, class M, class K> std::shared_ptr<T> getRes(M & map, const K & key, bool * isNew);
-	template <class T> void collectGarbageIn(T & collection);
-
-	GLResourceManager(const GLResourceManager &);
-	GLResourceManager & operator=(const GLResourceManager &);
-
-	friend class GLShader;
-	friend class GLProgram;
-	friend class GLTexture;
-};
 
 #endif

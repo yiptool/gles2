@@ -27,34 +27,65 @@
 #include "gl.h"
 #include <utility>
 
-class GLProgram;
-class GLResourceManager;
-
-class GLShader : public GLResource
+namespace GL
 {
-public:
-	inline GL::Enum type() const { return m_Type; }
-	inline GL::UInt handle() const { return m_Handle; }
+	class Program;
+	class ResourceManager;
 
-//protected:
-	GLShader(const std::string & resName, GL::Enum shaderType);
-	GLShader(const std::pair<GL::Enum, std::string> & pair);
-	~GLShader();
+	/** OpenGL ES shader. */
+	class Shader : public Resource
+	{
+	public:
+		/**
+		 * Returns type of the shader.
+		 * @returns GL::VERTEX_SHADER if this is a vertex shader
+		 * or GL::FRAGMENT_SHADER if this is a fragment shader.
+		 */
+		inline Enum type() const { return m_Type; }
 
-	void destroy();
+		/**
+		 * Returns raw OpenGL ES handle of the shader.
+		 * @return Raw handle of the shader.
+		 */
+		inline UInt handle() const { return m_Handle; }
 
-private:
-	GL::UInt m_Handle;
-	GL::Enum m_Type;
+//	protected:
+		/**
+		 * Constructor.
+		 * @param resName Name of the shader resource.
+		 * @param shaderType Type of the shader. Could be GL::VERTEX_SHADER or GL::FRAGMENT_SHADER.
+		 */
+		Shader(const std::string & resName, Enum shaderType);
 
-	GLShader(const GLShader &);
-	GLShader & operator=(const GLShader &);
+		/**
+		 * Constructor.
+		 * @param pair Parameters of the shader. *first* should be type of the shader (either
+		 * GL::VERTEX_SHADER or GL::FRAGMENT_SHADER) and *second* should be name of the shader resource.
+		 */
+		inline Shader(const std::pair<Enum, std::string> & pair) : Shader(pair.second, pair.first) {}
 
-	friend class GLProgram;
-	friend class GLResourceManager;
-};
+		/** Destructor. */
+		~Shader();
 
-typedef std::shared_ptr<GLShader> GLShaderPtr;
-typedef std::weak_ptr<GLShader> GLShaderWeakPtr;
+		/**
+		 * Releases the associated OpenGL shader.
+		 * This is equivalent to GL::deleteShader.
+		 */
+		void destroy();
+
+	private:
+		UInt m_Handle;
+		Enum m_Type;
+
+		Shader(const Shader &) = delete;
+		Shader & operator=(const Shader &) = delete;
+
+		friend class Program;
+		friend class ResourceManager;
+	};
+
+	typedef std::shared_ptr<Shader> ShaderPtr;
+	typedef std::weak_ptr<Shader> ShaderWeakPtr;
+}
 
 #endif

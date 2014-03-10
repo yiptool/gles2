@@ -22,11 +22,11 @@
 //
 #include "gl_resource.h"
 
-GLResource::GLResource(const std::string & resName)
+GL::Resource::Resource(const std::string & resName)
 	: m_Name(resName)
 {
 }
 
-GLResource::~GLResource()
+GL::Resource::~Resource()
 {
 }

@@ -26,28 +26,20 @@
 #include <iomanip>
 #include <stdexcept>
 
-GLShader::GLShader(const std::string & resName, GL::Enum shaderType)
-	: GLResource(resName),
+GL::Shader::Shader(const std::string & resName, Enum shaderType)
+	: Resource(resName),
 	  m_Handle(0),
 	  m_Type(shaderType)
 {
 	m_Handle = GL::createShader(m_Type);
 }
 
-GLShader::GLShader(const std::pair<GL::Enum, std::string> & pair)
-	: GLResource(pair.second),
-	  m_Handle(0),
-	  m_Type(pair.first)
-{
-	m_Handle = GL::createShader(m_Type);
-}
-
-GLShader::~GLShader()
+GL::Shader::~Shader()
 {
 	destroy();
 }
 
-void GLShader::destroy()
+void GL::Shader::destroy()
 {
 	if (m_Handle != 0)
 	{

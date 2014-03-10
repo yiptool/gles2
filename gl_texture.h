@@ -26,9 +26,7 @@
 #include "gl_resource.h"
 #include "gl.h"
 
-class GLResourceManager;
-
-class GLTexture : public GLResource
+class GLTexture : public GL::Resource
 {
 public:
 	inline void bind(GL::Enum target = GL::TEXTURE_2D) { GL::bindTexture(target, m_Handle); }
@@ -54,7 +52,7 @@ private:
 	GLTexture(const GLTexture &);
 	GLTexture & operator=(const GLTexture &);
 
-	friend class GLResourceManager;
+	friend class GL::ResourceManager;
 };
 
 typedef std::shared_ptr<GLTexture> GLTexturePtr;

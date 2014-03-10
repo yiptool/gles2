@@ -64,7 +64,7 @@ void GL::initShaderFromSource(UInt shader, const char * data)
 	{
 		std::vector<char> log(static_cast<size_t>(logLength + 1), 0);
 		getShaderInfoLog(shader, logLength, NULL, &log[0]);
-		Log::warn() << &log[0];
+//		Log::warn() << &log[0];
 	}
 }
 
@@ -79,7 +79,7 @@ void GL::initShaderFromSource(UInt shader, const std::vector<const char *> & dat
 	{
 		std::vector<char> log(static_cast<size_t>(logLength + 1), 0);
 		getShaderInfoLog(shader, logLength, NULL, &log[0]);
-		Log::warn() << &log[0];
+//		Log::warn() << &log[0];
 	}
 }
 
@@ -93,7 +93,7 @@ static bool iswhite(char ch)
 	return ch == ' ' || ch == '\t' || ch == '\r' || ch == '\n';
 }
 
-void GL::initProgramFromSource(UInt program, const char * data, GLResourceManager * resmgr,
+void GL::initProgramFromSource(UInt program, const char * data, ResourceManager * resmgr,
 	PFNLOADSHADERPROC loadFile)
 {
 	std::vector<std::string> lines;
@@ -186,7 +186,7 @@ void GL::initProgramFromSource(UInt program, const char * data, GLResourceManage
 				if (filename.length() > 0 && filename[filename.length() - 1] == '\n')
 					filename.resize(filename.length() - 1);
 				bool isNew = false;
-				GLShaderPtr shader = resmgr->getShader(type, filename, &isNew);
+				ShaderPtr shader = resmgr->getShader(type, filename, &isNew);
 				if (isNew)
 					initShaderFromSource(shader->handle(), loadFile(filename));
 				attachShader(program, shader->handle());
@@ -221,7 +221,7 @@ void GL::initProgramFromSource(UInt program, const char * data, GLResourceManage
 	}
 }
 
-void GL::initProgramFromSource(UInt program, const std::string & data, GLResourceManager * resmgr,
+void GL::initProgramFromSource(UInt program, const std::string & data, ResourceManager * resmgr,
 	PFNLOADSHADERPROC loadFile)
 {
 	return initProgramFromSource(program, data.c_str(), resmgr, loadFile);
@@ -237,7 +237,7 @@ void GL::linkProgramEx(UInt program)
 	{
 		std::vector<char> log(static_cast<size_t>(logLength + 1), 0);
 		getProgramInfoLog(program, logLength, NULL, &log[0]);
-		Log::warn() << "glLinkProgram(" << program << "): " << &log[0];
+//		Log::warn() << "glLinkProgram(" << program << "): " << &log[0];
 	}
 }
 
@@ -251,6 +251,6 @@ void GL::validateProgramEx(UInt program)
 	{
 		std::vector<char> log(static_cast<size_t>(logLength + 1), 0);
 		getProgramInfoLog(program, logLength, NULL, &log[0]);
-		Log::warn() << "glValidateProgram(" << program << "): " << &log[0];
+//		Log::warn() << "glValidateProgram(" << program << "): " << &log[0];
 	}
 }

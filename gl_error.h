@@ -26,7 +26,7 @@
 #include "gl.h"
 #include <sstream>
 #include <string>
-#include LOGGER_H
+//#include LOGGER_H
 
 #ifdef NDEBUG
  #define CHECK_GL_LOCATION(name, var, location)
@@ -44,14 +44,14 @@
 #else
  #define CHECK_GL_LOCATION(name, var, location) \
 	{ \
-		if (location < 0) \
-			Log::warn() << #name << "(\"" << var << "\") returned " << location << '.'; \
+		/*if (location < 0) \
+			Log::warn() << #name << "(\"" << var << "\") returned " << location << '.';*/ \
 	}
  #define CHECK_GL_ERROR_(name, params) \
 	{ \
-		GL::Enum err = GL::getError(); \
+		/*GL::Enum err = GL::getError(); \
 		if (err != GL::NO_ERROR) \
-			Log::error() << #name << '(' << params << "): " << err << '.'; \
+			Log::error() << #name << '(' << params << "): " << err << '.';*/ \
 	}
  #define CHECK_GL_ERROR0(name) CHECK_GL_ERROR_(name, "")
  #define CHECK_GL_ERROR1(name, p) CHECK_GL_ERROR_(name, p)

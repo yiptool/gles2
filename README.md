@@ -4,9 +4,100 @@ GLWrappers
 
 This is the convenient C++11 library for cross-platform OpenGL ES 2.0 programming.
 
+Please note that OpenGL ES context creation and management is outside of the scope
+of this library. This library only provides convenient wrappers for OpenGL ES API on
+both the desktop and mobile platforms.
 
-Building
-========
+This README contains a quick tour over the features of the library. For complete
+list of types, constants, functions and classes, please build the reference manual
+using the [Doxygen](http://www.stack.nl/~dimitri/doxygen/) tool.
+
+Wrappers
+--------
+
+All OpenGL types, constants, and functions are wrapped into the *GL* namespace.
+For example, to call the *glClear* function you may write the following piece
+of code:
+
+     GL::clear(GL::COLOR_BUFFER_BIT | GL::DEPTH_BUFFER_BIT);
+
+In debug builds, all calls to OpenGL functions are checked with *glError*
+calls. Any detected problems are reported to *std::clog*.
+
+Currently, there are three wrappers available:
+
+1. The **normal** wrapper is for use in all projects except for those built
+   using the Qt library. On systems with OpenGL ES 2.0 support this wrapper
+   invokes OpenGL ES functions directly. On desktop systems (Windows, Unix,
+   OSX) OpenGL ES calls are emulated through the full version of OpenGL (with
+   the help of the [OpenGL Extension Wrangler](http://glew.sourceforge.net/)
+   library).
+
+2. The **qt** wrapper is intended for use in projects built with the
+   [Qt library](http://qt-project.org/) (version 4.8 or later). OpenGL calls
+   are made through the
+   [QGLFunctions](http://qt-project.org/doc/qt-4.8/qglfunctions.html) class.
+
+3. At last, there is the **dummy** wrapper with all functions implemented as
+   empty stubs. This wrapper is useful for compilation on platforms without
+   OpenGL support and as a skeleton for new wrappers.
+
+
+Resource management
+-------------------
+
+This library includes convenient C++ wrappers for OpenGL resources (textures,
+shaders, etc.).
+
+The *GL::Resource* class is a base class for all OpenGL resources. All managed
+resources have names which could be obtained using the *name()* method
+(usually resource name is a name of file from which resource has been loaded).
+
+The *GL::ResourceManager* class is a manager of resources. It creates instances
+of resources and tracks their usage.
+
+### Resource loading
+
+There are convenient methods available in the *GL::ResourceManager* class:
+
+*getShader(type, name)*  
+*getProgram(name)*  
+*getTexture(name)*  
+
+These methods load shaders, programs and textures respectively from files
+with the specified *name* and store them in the resource manager. If resource
+is already in memory, then these methods simply return a reference to the
+same resource.
+
+### Dynamic resource creation
+
+If you wouldn't like to load resource from file and would like to create it
+dynamically, then the following methods are available:
+
+*createShader(type, name)*  
+*createProgram(name)*  
+*createTexture(name)*  
+
+Note that these methods do not register resource in the manager. This means
+that *getShader*, *getProgram* and *getTexture* methods will not be able to
+retrieve these resources by their names. The only place where the name you pass
+to these methods is used, is the return value of the *name()* method of the
+corresponding instance of *GL::Resource*.
+
+### Resource tracking
+
+For *GL::ResourceManager* to work properly you have to periodically call the
+*collectGarbage()* method. If you decline to do so, negligible memory leaks
+are possible.
+
+Please note that resource manager does not implement any caching: resources are
+considered alive only while there is at least one reference to them. If you want
+to cache the resources, you have to subclass the *GL::ResourceManager* class and
+implement caching functionality yourself.
+
+
+Compiling this library
+======================
 
 This library is not intended to be built directly. Instead it is supposed
 to be included into projects using the *buildtool*. Please consult the
@@ -114,3 +205,19 @@ IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
 CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 MATERIALS OR THE USE OR OTHER DEALINGS IN THE MATERIALS.
+
+-------
+
+**Doxygen comments for some constants, functions and methods are based on the
+[OpenGL ES 2.0 Reference Pages](http://www.khronos.org/opengles/sdk/docs/man/)**.
+
+Copyright © 1991-2006 Silicon Graphics, Inc.  
+This document is licensed under the
+[SGI Free Software B License](http://oss.sgi.com/projects/FreeB/).
+
+Copyright © 2003-2005 3Dlabs Inc. Ltd.  
+Copyright © 2005 Addison-Wesley.  
+Copyright © 2006, 2008 Khronos Group.  
+This material may be distributed subject to the terms and conditions set
+forth in the [Open Publication License](http://opencontent.org/openpub/),
+v1.0, 8 June 1999.

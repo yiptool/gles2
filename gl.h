@@ -47,10 +47,10 @@
  #undef NO_ERROR
 #endif
 
-class GLResourceManager;
-
 namespace GL
 {
+	class ResourceManager;
+
 	enum Enum
 	{
 		FALSE = 0,
@@ -245,9 +245,9 @@ namespace GL
 	void initShaderFromSource(UInt shader, const std::string & data);
 
 	void initProgramFromSource(UInt program, const char * data,
-		GLResourceManager * resmgr = NULL, PFNLOADSHADERPROC loadFile = NULL);
+		ResourceManager * resmgr = NULL, PFNLOADSHADERPROC loadFile = NULL);
 	void initProgramFromSource(UInt program, const std::string & data,
-		GLResourceManager * resmgr = NULL, PFNLOADSHADERPROC loadFile = NULL);
+		ResourceManager * resmgr = NULL, PFNLOADSHADERPROC loadFile = NULL);
 
 	void linkProgramEx(UInt program);
 	void validateProgramEx(UInt program);

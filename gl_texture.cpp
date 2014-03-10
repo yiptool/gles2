@@ -26,7 +26,7 @@
 #include <stdexcept>
 
 GLTexture::GLTexture(const std::string & resName)
-	: GLResource(resName),
+	: GL::Resource(resName),
 	  m_Handle(0),
 	  m_Width(0),
 	  m_Height(0)

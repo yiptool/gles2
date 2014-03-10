@@ -25,28 +25,18 @@
 #include <sstream>
 #include <stdexcept>
 
-GLProgram::GLProgram(const std::string & resName)
-	: GLResource(resName)
+GL::Program::Program(const std::string & resName)
+	: Resource(resName)
 {
 	m_Handle = GL::createProgram();
 }
 
-GLProgram::~GLProgram()
+GL::Program::~Program()
 {
 	destroy();
 }
 
-void GLProgram::attachShader(const GLShaderPtr & shader)
-{
-	GL::attachShader(m_Handle, shader->m_Handle);
-}
-
-void GLProgram::detachShader(const GLShaderPtr & shader)
-{
-	GL::detachShader(m_Handle, shader->m_Handle);
-}
-
-void GLProgram::destroy()
+void GL::Program::destroy()
 {
 	if (m_Handle != 0)
 	{

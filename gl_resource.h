@@ -27,29 +27,50 @@
 #include <cassert>
 #include <memory>
 
-class GLResourceManager;
-
-class GLResource
+namespace GL
 {
-public:
-	inline const std::string & name() const { return m_Name; }
+	class ResourceManager;
 
-protected:
-	GLResource(const std::string & resName);
-	~GLResource();
+	/** Base class for resources managed by GL::ResourceManager. */
+	class Resource
+	{
+	public:
+		/**
+		 * Returns name of the resource.
+		 * @return Name of the resource.
+		 */
+		inline const std::string & name() const { return m_Name; }
 
-	virtual void destroy() = 0;
+	protected:
+		/**
+		 * Constructor.
+		 * @param resName Name of the resource.
+		 */
+		Resource(const std::string & resName);
 
-private:
-	std::string m_Name;
+		/** Destructor. */
+		~Resource();
 
-	GLResource(const GLResource &);
-	GLResource & operator=(const GLResource &);
+		/**
+		 * Releases the associated OpenGL resource.
+		 * This method allows to release the associated OpenGL resource without actually destroying
+		 * this instance of GL::Resource.
+		 */
+		virtual void destroy() = 0;
 
-	friend class GLResourceManager;
-};
+	private:
+		std::string m_Name;
 
-typedef std::shared_ptr<GLResource> GLResourcePtr;
-typedef std::weak_ptr<GLResource> GLResourceWeakPtr;
+		Resource(const Resource &) = delete;
+		Resource & operator=(const Resource &) = delete;
+
+		friend class ResourceManager;
+	};
+
+	/** Strong pointer to the OpenGL resource. */
+	typedef std::shared_ptr<Resource> ResourcePtr;
+	/** Weak pointer to the OpenGL resource. */
+	typedef std::weak_ptr<Resource> ResourceWeakPtr;
+}
 
 #endif

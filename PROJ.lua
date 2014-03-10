@@ -1,9 +1,9 @@
 
 SUBPROJECT("gl_wrappers")
 
-if not HAS_SUBPROJECT("cxx-util") then
-	error("This library depends on the 'cxx-util' library.")
-end
+-- if not HAS_SUBPROJECT("cxx-util") then
+--	error("This library depends on the 'cxx-util' library.")
+-- end
 
 DEFINES {
 	"GL_H=\"" .. CURRENT_SOURCE_DIR .. "/gl.h\"",
