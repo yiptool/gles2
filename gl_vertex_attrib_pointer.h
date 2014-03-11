@@ -76,7 +76,7 @@ namespace GL
 		GL::UInt m_Index;
 
 		VertexAttribPointer(const VertexAttribPointer &) = delete;
-		VertexAttribPointer & operator=(const GLVertexAttribPointer &) = delete;
+		VertexAttribPointer & operator=(const VertexAttribPointer &) = delete;
 	};
 }
 
