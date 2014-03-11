@@ -57,15 +57,15 @@ namespace GL
 
 		/**
 		 * Links the program.
-		 * This is equivalent to GL::linkProgramEx.
+		 * This is equivalent to GL::linkProgram but also reports any warnings and errors to *std::clog*.
 		 */
-		inline void link() { GL::linkProgramEx(m_Handle); }
+		void link();
 
 		/**
 		 * Checks whether this program may be run with the current OpenGL state.
-		 * This is equivalent to GL::validateProgramEx.
+		 * This is equivalent to GL::validateProgram but also reports any warnings and errors to *std::clog*.
 		 */
-		inline void validate() { GL::validateProgramEx(m_Handle); }
+		void validate();
 
 		/**
 		 * Binds program into the OpenGL context.

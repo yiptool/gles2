@@ -226,31 +226,3 @@ void GL::initProgramFromSource(UInt program, const std::string & data, ResourceM
 {
 	return initProgramFromSource(program, data.c_str(), resmgr, loadFile);
 }
-
-void GL::linkProgramEx(UInt program)
-{
-	linkProgram(program);
-
-	Int logLength = 0;
-	getProgramiv(program, INFO_LOG_LENGTH, &logLength);
-	if (logLength > 0)
-	{
-		std::vector<char> log(static_cast<size_t>(logLength + 1), 0);
-		getProgramInfoLog(program, logLength, NULL, &log[0]);
-//		Log::warn() << "glLinkProgram(" << program << "): " << &log[0];
-	}
-}
-
-void GL::validateProgramEx(UInt program)
-{
-	validateProgram(program);
-
-	Int logLength = 0;
-	getProgramiv(program, INFO_LOG_LENGTH, &logLength);
-	if (logLength > 0)
-	{
-		std::vector<char> log(static_cast<size_t>(logLength + 1), 0);
-		getProgramInfoLog(program, logLength, NULL, &log[0]);
-//		Log::warn() << "glValidateProgram(" << program << "): " << &log[0];
-	}
-}

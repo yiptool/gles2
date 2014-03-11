@@ -24,6 +24,7 @@
 #include "gl_resource_manager.h"
 #include <sstream>
 #include <stdexcept>
+#include <iostream>
 
 GL::Program::Program(const std::string & resName)
 	: Resource(resName)
@@ -34,6 +35,34 @@ GL::Program::Program(const std::string & resName)
 GL::Program::~Program()
 {
 	destroy();
+}
+
+void GL::Program::link()
+{
+	linkProgram(m_Handle);
+
+	Int logLength = 0;
+	getProgramiv(m_Handle, INFO_LOG_LENGTH, &logLength);
+	if (logLength > 0)
+	{
+		std::vector<char> log(static_cast<size_t>(logLength + 1), 0);
+		getProgramInfoLog(m_Handle, logLength, NULL, log.data());
+		std::clog << "Linking program \"" << name() << "\":\n" << log.data();
+	}
+}
+
+void GL::Program::validate()
+{
+	validateProgram(m_Handle);
+
+	Int logLength = 0;
+	getProgramiv(m_Handle, INFO_LOG_LENGTH, &logLength);
+	if (logLength > 0)
+	{
+		std::vector<char> log(static_cast<size_t>(logLength + 1), 0);
+		getProgramInfoLog(m_Handle, logLength, NULL, log.data());
+		std::clog << "Validating program \"" << name() << "\":\n" << log.data();
+	}
 }
 
 void GL::Program::destroy()

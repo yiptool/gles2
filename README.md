@@ -69,6 +69,62 @@ with the specified *name* and store them in the resource manager. If resource
 is already in memory, then these methods simply return a reference to the
 same resource.
 
+#### File format of shaders
+
+Shaders are simply a source file in the GLSL language.
+
+Please note that you have to support both GLSL and ESSL (OpenGL ES dialect of
+GLSL) in your shaders. For example, in OpenGL ES you have to specify floating-point
+precision in the fragment shader. This is not supported in "desktop" OpenGL.
+
+You could use the *GL_ES* preprocessor definition to distinguish ESSL from GLSL:
+
+     #ifdef GL_ES
+     precision mediump float;
+     #endif
+
+#### File format of programs
+
+Programs are represented using a simple text format.
+
+Each line of a program file is either an empty line, a directive or a shader source
+code. Empty lines are ignored. Lines starting with the '%' symbol are considered
+directives. Only two directives are allowed: *%vertex* and *%fragment*.
+
+The *%vertex* directive starts source code of a vertex shader. The *%fragment*
+directive starts source of a fragment shader. Optionally you could specify a
+file name for any of this directives. In this case shader will be loaded from
+the specified file.
+
+Sample program file:
+
+     %vertex
+
+     attribute vec2 a_position;
+     void main()
+     {
+         gl_Position = a_position;
+     }
+
+     %fragment
+
+     #ifdef GL_ES
+     precision mediump float;
+     #endif
+
+     void main()
+     {
+         gl_FragColor = vec4(1.0f);
+     }
+
+Sample program file that loads shaders from another files:
+
+     %vertex shader.vsh
+     %fragment shader.fsh
+
+Please note that shader file names are relative to the resources directory, not
+to the directory where the program file is located.
+
 ### Dynamic resource creation
 
 If you wouldn't like to load resource from file and would like to create it

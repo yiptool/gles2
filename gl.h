@@ -248,9 +248,6 @@ namespace GL
 		ResourceManager * resmgr = NULL, PFNLOADSHADERPROC loadFile = NULL);
 	void initProgramFromSource(UInt program, const std::string & data,
 		ResourceManager * resmgr = NULL, PFNLOADSHADERPROC loadFile = NULL);
-
-	void linkProgramEx(UInt program);
-	void validateProgramEx(UInt program);
 }
 
 #endif
