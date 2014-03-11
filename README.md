@@ -42,6 +42,9 @@ Currently, there are three wrappers available:
    empty stubs. This wrapper is useful for compilation on platforms without
    OpenGL support and as a skeleton for new wrappers.
 
+**Before usage, wrappers should be initialized by calling the *GL::init()*
+method.**
+
 
 Resource management
 -------------------
