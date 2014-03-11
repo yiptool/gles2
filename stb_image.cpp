@@ -4732,7 +4732,8 @@ static int stb_read(void * user, char * data, int size)
 		std::istream * stream = reinterpret_cast<std::istream *>(user);
 		if (stream->eof() || stream->bad() || stream->fail())
 			return 0;
-		return static_cast<int>(stream->read(data, static_cast<std::streamsize>(size)));
+		stream->read(data, static_cast<std::streamsize>(size));
+		return static_cast<int>(stream->gcount());
 	}
 	catch (const std::exception & e)
 	{
