@@ -25,8 +25,8 @@
 
 #include "gl.h"
 #include <sstream>
+#include <iostream>
 #include <string>
-//#include LOGGER_H
 
 #ifdef NDEBUG
  #define CHECK_GL_LOCATION(name, var, location)
@@ -44,14 +44,14 @@
 #else
  #define CHECK_GL_LOCATION(name, var, location) \
 	{ \
-		/*if (location < 0) \
-			Log::warn() << #name << "(\"" << var << "\") returned " << location << '.';*/ \
+		if (location < 0) \
+			std::clog << #name << "(\"" << var << "\") returned " << location << '.'; \
 	}
  #define CHECK_GL_ERROR_(name, params) \
 	{ \
-		/*GL::Enum err = GL::getError(); \
+		GL::Enum err = GL::getError(); \
 		if (err != GL::NO_ERROR) \
-			Log::error() << #name << '(' << params << "): " << err << '.';*/ \
+			std::clog << #name << '(' << params << "): " << err << '.'; \
 	}
  #define CHECK_GL_ERROR0(name) CHECK_GL_ERROR_(name, "")
  #define CHECK_GL_ERROR1(name, p) CHECK_GL_ERROR_(name, p)
@@ -63,9 +63,11 @@
  #define CHECK_GL_ERROR7(name, p1, p2, p3, p4, p5, p6, p7) CHECK_GL_ERROR_(name, p1 << ", " << p2 << ", " << p3 << ", " << p4 << ", " << p5 << ", " << p6 << ", " << p7)
  #define CHECK_GL_ERROR8(name, p1, p2, p3, p4, p5, p6, p7, p8) CHECK_GL_ERROR_(name, p1 << ", " << p2 << ", " << p3 << ", " << p4 << ", " << p5 << ", " << p6 << ", " << p7 << ", " << p8)
  #define CHECK_GL_ERROR9(name, p1, p2, p3, p4, p5, p6, p7, p8, p9) CHECK_GL_ERROR_(name, p1 << ", " << p2 << ", " << p3 << ", " << p4 << ", " << p5 << ", " << p6 << ", " << p7 << ", " << p8 << ", " << p9)
- #define CHECK_GLCLEAR_ERROR(name, p) CHECK_GL_ERROR_(name, decodeGLClearMask_(p))
+ #define CHECK_GLCLEAR_ERROR(name, p) CHECK_GL_ERROR_(name, GL::decodeGLClearMask_(p))
  std::ostream & operator<<(std::ostream & s, GL::Enum value);
- std::string decodeGLClearMask_(GL::Bitfield mask);
+ namespace GL {
+	std::string decodeGLClearMask_(GL::Bitfield mask);
+ }
 #endif
 
 #endif

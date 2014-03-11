@@ -21,9 +21,7 @@
 // THE SOFTWARE.
 //
 #include "gl_error.h"
-#include <iostream>
 #include <iomanip>
-#include <sstream>
 
 std::ostream & operator<<(std::ostream & s, GL::Enum value)
 {
@@ -39,7 +37,7 @@ std::ostream & operator<<(std::ostream & s, GL::Enum value)
 	return s;
 }
 
-std::string decodeGLClearMask_(GL::Bitfield mask)
+std::string GL::decodeGLClearMask_(GL::Bitfield mask)
 {
 	const char * prefix = "";
 	std::stringstream ss;
