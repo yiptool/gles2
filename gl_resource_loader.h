@@ -69,20 +69,12 @@ namespace GL
 		virtual ResourceStreamPtr openResource(const std::string & name);
 
 		/**
-		 * Returns pointer to the instance of the resource loader.
-		 * @return Pointer to the instance of the resource loader.
+		 * Returns reference to the standard resource loader.
+		 * @return Reference to the standard resource loader.
 		 */
-		static const ResourceLoaderPtr & instance();
-
-		/**
-		 * Sets instance of the resource loader to use.
-		 * @param loader Pointer to the instance of the resource loader.
-		 */
-		static void setInstance(const ResourceLoaderPtr & loader);
+		static ResourceLoader & standard();
 
 	private:
-		static ResourceLoaderPtr & pointer();
-
 		ResourceLoader(const ResourceLoader &) = delete;
 		ResourceLoader & operator=(const ResourceLoader &) = delete;
 	};

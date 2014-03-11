@@ -132,14 +132,18 @@ to the directory where the program file is located.
 
 Default behavior of the library is to load resources from files using *std::ifstream*.
 If this is not a desired behavior, custom resource loader could be used. Overload the
-GL::ResourceLoader class and pass it's instance to the GL::ResourceLoader::setInstance()
-method:
+GL::ResourceLoader class and pass it's instance to the GL::ResourceManager constructor:
 
      class MyResourceLoader : public GL::ResourceLoader
      {
-         std::string loadResource(const std::string & name)
+         GL::ResourceStreamPtr openResource(const std::string & name)
          {
              // ...
+             return std::static_pointer_cast<std::istream>(std::make_shared<std::ifstream>(name));
+         }
+         std::string loadResource(const std::string & name)
+         {
+             // It is not necessary to overload this method: default implementation uses openResource()
          }
      };
      

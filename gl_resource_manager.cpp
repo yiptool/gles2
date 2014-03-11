@@ -21,7 +21,6 @@
 // THE SOFTWARE.
 //
 #include "gl_resource_manager.h"
-#include "gl_resource_loader.h"
 
 const std::string GL::ResourceManager::m_DefaultTextureName = "<texture>";
 const std::string GL::ResourceManager::m_DefaultShaderName = "<shader>";
@@ -50,7 +49,8 @@ namespace
 	};
 }
 
-GL::ResourceManager::ResourceManager()
+GL::ResourceManager::ResourceManager(ResourceLoader & loader)
+	: m_ResourceLoader(&loader)
 {
 }
 
@@ -84,7 +84,7 @@ GL::TexturePtr GL::ResourceManager::getTexture(const std::string & name)
 	bool isNew = false;
 	TexturePtr texture = getResource<Texture, GLTexture>(m_Textures, name, &isNew);
 	if (isNew)
-		texture->initFromStream(*ResourceLoader::instance()->openResource(name));
+		texture->initFromStream(*m_ResourceLoader->openResource(name));
 	return texture;
 }
 
@@ -100,7 +100,7 @@ GL::ShaderPtr GL::ResourceManager::getShader(Enum type, const std::string & name
 	bool isNew = false;
 	ShaderPtr shader = getResource<Shader, GLShader>(m_Shaders, std::make_pair(type, name), &isNew);
 	if (isNew)
-		shader->initFromSource(ResourceLoader::instance()->loadResource(name));
+		shader->initFromSource(m_ResourceLoader->loadResource(name));
 	return shader;
 }
 
@@ -116,7 +116,7 @@ GL::ProgramPtr GL::ResourceManager::getProgram(const std::string & name)
 	bool isNew = false;
 	ProgramPtr program = getResource<Program, GLProgram>(m_Programs, name, &isNew);
 	if (isNew)
-		program->initFromSource(ResourceLoader::instance()->loadResource(name));
+		program->initFromSource(m_ResourceLoader->loadResource(name));
 	return program;
 }
 

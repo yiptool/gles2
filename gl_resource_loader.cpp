@@ -59,21 +59,8 @@ GL::ResourceStreamPtr GL::ResourceLoader::openResource(const std::string & name)
 	return stream;
 }
 
-const GL::ResourceLoaderPtr & GL::ResourceLoader::instance()
+GL::ResourceLoader & GL::ResourceLoader::standard()
 {
-	ResourceLoaderPtr & ptr = pointer();
-	if (!ptr)
-		ptr = std::make_shared<ResourceLoader>();
-	return ptr;
-}
-
-void GL::ResourceLoader::setInstance(const ResourceLoaderPtr & loader)
-{
-	pointer() = loader;
-}
-
-GL::ResourceLoaderPtr & GL::ResourceLoader::pointer()
-{
-	static ResourceLoaderPtr pointer;
-	return pointer;
+	static GL::ResourceLoader instance;
+	return instance;
 }

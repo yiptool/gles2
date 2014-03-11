@@ -26,6 +26,7 @@
 #include "gl_texture.h"
 #include "gl_shader.h"
 #include "gl_program.h"
+#include "gl_resource_loader.h"
 #include <string>
 #include <vector>
 #include <unordered_map>
@@ -59,8 +60,11 @@ namespace GL
 	class ResourceManager
 	{
 	public:
-		/** Constructor. */
-		ResourceManager();
+		/**
+		 * Constructor.
+		 * @param loader Custom loader for resources (optional).
+		 */
+		ResourceManager(ResourceLoader & loader = ResourceLoader::standard());
 
 		/** Destructor. */
 		virtual ~ResourceManager();
@@ -136,6 +140,7 @@ namespace GL
 		static const std::string m_DefaultShaderName;
 		static const std::string m_DefaultProgramName;
 
+		ResourceLoader * m_ResourceLoader;
 		std::vector<ResourceWeakPtr> m_AllResources;
 		std::unordered_map<std::string, TextureWeakPtr> m_Textures;
 		std::unordered_map<Internal::ShaderMapKey, ShaderWeakPtr, Internal::ShaderMapKeyHash> m_Shaders;
