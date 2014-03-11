@@ -2529,6 +2529,7 @@ static int create_png_image(png *a, uint8 *raw, uint32 raw_len, int out_n, int i
 
    // de-interlacing
    final = (uint8 *) malloc(a->s->img_x * a->s->img_y * out_n);
+   if (!final) return e("outofmem", "Out of memory");
    for (p=0; p < 7; ++p) {
       int xorig[] = { 0,4,0,2,0,1,0 };
       int yorig[] = { 0,0,4,0,2,0,1 };
@@ -4306,6 +4307,7 @@ static float *hdr_load(stbi *s, int *x, int *y, int *comp, int req_comp)
 
    // Read data
    hdr_data = (float *) malloc(height * width * req_comp * sizeof(float));
+   if (!hdr_data) return epf("outofmem", "Out of memory");
 
    // Load image data
    // image data is stored as some number of sca
@@ -4338,13 +4340,13 @@ static float *hdr_load(stbi *s, int *x, int *y, int *comp, int req_comp)
             hdr_convert(hdr_data, rgbe, req_comp);
             i = 1;
             j = 0;
-            free(scanline);
+            if (scanline) free(scanline);
             goto main_decode_loop; // yes, this makes no sense
          }
          len <<= 8;
          len |= get8(s);
          if (len != width) { free(hdr_data); free(scanline); return epf("invalid decoded scanline length", "corrupt HDR"); }
-         if (scanline == NULL) scanline = (stbi_uc *) malloc(width * 4);
+         if (scanline == NULL) { scanline = (stbi_uc *) malloc(width * 4); if (!scanline) return epf("outofmem", "Out of memory"); }
             
          for (k = 0; k < 4; ++k) {
             i = 0;
@@ -4366,7 +4368,7 @@ static float *hdr_load(stbi *s, int *x, int *y, int *comp, int req_comp)
          for (i=0; i < width; ++i)
             hdr_convert(hdr_data+(j*width + i)*req_comp, scanline + i*4, req_comp);
       }
-      free(scanline);
+      if (scanline) free(scanline);
    }
 
    return hdr_data;
