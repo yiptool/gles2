@@ -50,14 +50,6 @@ namespace Stb
 		};
 
 		/**
-		 * Loads image from the specified resource.
-		 * @param name Name of the resource.
-		 * @param fmt Target format. The image will be converted into the requested format, if needed.
-		 * To automatically detect target format, value of UNKNOWN could be used.
-		 */
-		static ImagePtr loadFromResource(const std::string & name, Format fmt = UNKNOWN);
-
-		/**
 		 * Loads image from the specified input stream.
 		 * @param s Stream to load image from.
 		 * @param fmt Target format. The image will be converted into the requested format, if needed.

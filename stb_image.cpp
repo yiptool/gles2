@@ -356,7 +356,6 @@ extern void stbi_install_YCbCr_to_RGB(stbi_YCbCr_to_RGB_run func);
 #ifndef STBI_HEADER_FILE_ONLY
 
 #include "stb_image.h"
-#include "gl_resource_loader.h"
 #include <iostream>
 #include <stdexcept>
 #include <sstream>
@@ -4711,9 +4710,13 @@ struct Stb::Image::Wrapper : public Stb::Image
 
 static int stb_eof(void * user)
 {
-	try {
-		return reinterpret_cast<std::istream *>(user)->eof();
-	} catch (const std::exception & e) {
+	try
+	{
+		std::istream * stream = reinterpret_cast<std::istream *>(user);
+		return stream->eof() || stream->bad() || stream->fail();
+	}
+	catch (const std::exception & e)
+	{
 		std::clog << "Error reading image: " << e.what() << std::endl;
 		return 1;
 	}
@@ -4724,10 +4727,15 @@ static int stb_read(void * user, char * data, int size)
 	if (size < 0)
 		size = 0;
 
-	try {
+	try
+	{
 		std::istream * stream = reinterpret_cast<std::istream *>(user);
+		if (stream->eof() || stream->bad() || stream->fail())
+			return 0;
 		return static_cast<int>(stream->read(data, static_cast<std::streamsize>(size)));
-	} catch (const std::exception & e) {
+	}
+	catch (const std::exception & e)
+	{
 		std::clog << "Error reading image: " << e.what() << std::endl;
 		return 0;
 	}
@@ -4735,10 +4743,13 @@ static int stb_read(void * user, char * data, int size)
 
 static void stb_skip(void * user, unsigned n)
 {
-	try {
+	try
+	{
 		std::istream * stream = reinterpret_cast<std::istream *>(user);
 		stream->ignore(static_cast<std::streamsize>(n));
-	} catch (const std::exception & e) {
+	}
+	catch (const std::exception & e)
+	{
 		std::clog << "Error reading image: " << e.what() << std::endl;
 	}
 }
@@ -4753,16 +4764,6 @@ Stb::Image::~Image()
 {
 	if (m_Data != &g_DummyData)
 		stbi_image_free(m_Data);
-}
-
-Stb::ImagePtr Stb::Image::loadFromResource(const std::string & name, Format fmt)
-{
-	try {
-		return loadFromStream(*GL::ResourceLoader::instance()->openResource(name), fmt);
-	} catch (const std::exception & e) {
-		std::clog << "Error reading image: " << e.what() << std::endl;
-		return std::static_pointer_cast<Image>(std::make_shared<Image::Wrapper>());
-	}
 }
 
 Stb::ImagePtr Stb::Image::loadFromStream(std::istream & s, Format fmt)
