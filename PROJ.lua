@@ -35,4 +35,6 @@ SOURCE_FILES {
 	"gl_texture.cpp",
 	"gl_texture.h",
 	"gl_vertex_attrib_pointer.h",
+	"stb_image.cpp",
+	"stb_image.h",
 }
