@@ -85,7 +85,7 @@ namespace GL
 		 */
 		inline void use() { GL::useProgram(m_Handle); }
 
-//	protected:
+	protected:
 		/**
 		 * Constructor.
 		 * @param resMgr Pointer to the resource manager.

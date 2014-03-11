@@ -69,7 +69,7 @@ namespace GL
 		 */
 		inline void initFromSource(const std::string & data) { initFromSource(data.c_str()); }
 
-//	protected:
+	protected:
 		/**
 		 * Constructor.
 		 * @param manager Pointer to the resource manager.
@@ -77,15 +77,6 @@ namespace GL
 		 * @param shaderType Type of the shader. Could be GL::VERTEX_SHADER or GL::FRAGMENT_SHADER.
 		 */
 		Shader(ResourceManager * manager, const std::string & resName, Enum shaderType);
-
-		/**
-		 * Constructor.
-		 * @param manager Pointer to the resource manager.
-		 * @param pair Parameters of the shader. *first* should be type of the shader (either
-		 * GL::VERTEX_SHADER or GL::FRAGMENT_SHADER) and *second* should be name of the shader resource.
-		 */
-		inline Shader(ResourceManager * manager, const std::pair<Enum, std::string> & pair)
-			: Shader(manager, pair.second, pair.first) {}
 
 		/** Destructor. */
 		~Shader();

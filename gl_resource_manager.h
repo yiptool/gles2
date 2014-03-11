@@ -128,8 +128,9 @@ namespace GL
 		std::unordered_map<Internal::ShaderMapKey, ShaderWeakPtr, Internal::ShaderMapKeyHash> m_Shaders;
 		std::unordered_map<std::string, ProgramWeakPtr> m_Programs;
 
-		template <class T, class M, class K> std::shared_ptr<T> getResource(M & map, const K & key, bool * isNew);
 		template <class T> void collectGarbageIn(T & collection);
+		template <class T, class P, class M, class K>
+			std::shared_ptr<T> getResource(M & map, const K & key, bool * isNew);
 
 		ResourceManager(const ResourceManager &);
 		ResourceManager & operator=(const ResourceManager &);

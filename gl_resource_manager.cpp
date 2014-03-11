@@ -27,6 +27,23 @@ const std::string GL::ResourceManager::m_DefaultTextureName = "<texture>";
 const std::string GL::ResourceManager::m_DefaultShaderName = "<shader>";
 const std::string GL::ResourceManager::m_DefaultProgramName = "<program>";
 
+namespace
+{
+	struct GLProgram : public GL::Program
+	{
+		inline GLProgram(GL::ResourceManager * resMgr, const std::string & resName)
+			: GL::Program(resMgr, resName) {}
+	};
+
+	struct GLShader : public GL::Shader
+	{
+		inline GLShader(GL::ResourceManager * resMgr, const std::string & resName, GL::Enum shaderType)
+			: GL::Shader(resMgr, resName, shaderType) {}
+		inline GLShader(GL::ResourceManager * resMgr, const std::pair<GL::Enum, std::string> & pair)
+			: GL::Shader(resMgr, pair.second, pair.first) {}
+	};
+}
+
 GL::ResourceManager::ResourceManager()
 {
 }
@@ -58,12 +75,12 @@ GLTexturePtr GL::ResourceManager::createTexture(const std::string & name)
 
 GLTexturePtr GL::ResourceManager::getTexture(const std::string & name, bool * isNew)
 {
-	return getResource<GLTexture>(m_Textures, name, isNew);
+	return getResource<GLTexture, GLTexture>(m_Textures, name, isNew);
 }
 
 GL::ShaderPtr GL::ResourceManager::createShader(GL::Enum type, const std::string & name)
 {
-	ShaderPtr shader = std::make_shared<Shader>(this, name, type);
+	ShaderPtr shader = std::static_pointer_cast<GL::Shader>(std::make_shared<GLShader>(this, name, type));
 	m_AllResources.push_back(shader);
 	return shader;
 }
@@ -71,7 +88,7 @@ GL::ShaderPtr GL::ResourceManager::createShader(GL::Enum type, const std::string
 GL::ShaderPtr GL::ResourceManager::getShader(GL::Enum type, const std::string & name)
 {
 	bool isNew = false;
-	ShaderPtr shader = getResource<Shader>(m_Shaders, std::make_pair(type, name), &isNew);
+	ShaderPtr shader = getResource<GL::Shader, GLShader>(m_Shaders, std::make_pair(type, name), &isNew);
 	if (isNew)
 		shader->initFromSource(GL::ResourceLoader::instance()->loadResource(name));
 	return shader;
@@ -79,7 +96,7 @@ GL::ShaderPtr GL::ResourceManager::getShader(GL::Enum type, const std::string & 
 
 GL::ProgramPtr GL::ResourceManager::createProgram(const std::string & name)
 {
-	ProgramPtr program = std::make_shared<Program>(this, name);
+	ProgramPtr program = std::static_pointer_cast<GL::Program>(std::make_shared<GLProgram>(this, name));
 	m_AllResources.push_back(program);
 	return program;
 }
@@ -87,36 +104,10 @@ GL::ProgramPtr GL::ResourceManager::createProgram(const std::string & name)
 GL::ProgramPtr GL::ResourceManager::getProgram(const std::string & name)
 {
 	bool isNew = false;
-	ProgramPtr program = getResource<Program>(m_Programs, name, &isNew);
+	ProgramPtr program = getResource<GL::Program, GLProgram>(m_Programs, name, &isNew);
 	if (isNew)
 		program->initFromSource(GL::ResourceLoader::instance()->loadResource(name));
 	return program;
-}
-
-template <class T, class M, class K>
-std::shared_ptr<T> GL::ResourceManager::getResource(M & map, const K & key, bool * isNew)
-{
-	std::shared_ptr<T> result;
-	typename M::iterator it = map.find(key);
-	if (it != map.end() && (result = it->second.lock()))
-	{
-		if (isNew)
-			*isNew = false;
-		return result;
-	}
-	else
-	{
-		if (isNew)
-			*isNew = true;
-
-		std::shared_ptr<T> resource = std::make_shared<T>(this, key);
-		if (it != map.end())
-			it->second = resource;
-		else
-			map.insert(std::make_pair(key, resource));
-
-		return resource;
-	}
 }
 
 template <class T> static bool expired(const std::weak_ptr<T> & ptr)
@@ -137,5 +128,31 @@ template <class T> void GL::ResourceManager::collectGarbageIn(T & collection)
 			++it;
 		else
 			it = collection.erase(it);
+	}
+}
+
+template <class T, class P, class M, class K>
+std::shared_ptr<T> GL::ResourceManager::getResource(M & map, const K & key, bool * isNew)
+{
+	std::shared_ptr<T> result;
+	typename M::iterator it = map.find(key);
+	if (it != map.end() && (result = it->second.lock()))
+	{
+		if (isNew)
+			*isNew = false;
+		return result;
+	}
+	else
+	{
+		if (isNew)
+			*isNew = true;
+
+		std::shared_ptr<T> resource = std::static_pointer_cast<T>(std::make_shared<P>(this, key));
+		if (it != map.end())
+			it->second = resource;
+		else
+			map.insert(std::make_pair(key, resource));
+
+		return resource;
 	}
 }
