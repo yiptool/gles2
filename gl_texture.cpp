@@ -25,8 +25,8 @@
 #include <sstream>
 #include <stdexcept>
 
-GLTexture::GLTexture(GL::ResourceManager * mgr, const std::string & resName)
-	: GL::Resource(resName),
+GL::Texture::Texture(GL::ResourceManager * mgr, const std::string & resName)
+	: Resource(resName),
 	  m_Handle(0),
 	  m_Width(0),
 	  m_Height(0)
@@ -35,12 +35,16 @@ GLTexture::GLTexture(GL::ResourceManager * mgr, const std::string & resName)
 	GL::genTextures(1, &m_Handle);
 }
 
-GLTexture::~GLTexture()
+GL::Texture::~Texture()
 {
 	destroy();
 }
 
-void GLTexture::destroy()
+void GL::Texture::initFromResourceData(const void * data, size_t size)
+{
+}
+
+void GL::Texture::destroy()
 {
 	if (m_Handle != 0)
 	{

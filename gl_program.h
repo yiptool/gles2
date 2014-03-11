@@ -112,9 +112,9 @@ namespace GL
 		friend class ResourceManager;
 	};
 
-	/** Strong pointer to the OpenGL program. */
+	/** Strong pointer to the OpenGL ES program. */
 	typedef std::shared_ptr<Program> ProgramPtr;
-	/** Weak pointer to the OpenGL program. */
+	/** Weak pointer to the OpenGL ES program. */
 	typedef std::weak_ptr<Program> ProgramWeakPtr;
 }
 

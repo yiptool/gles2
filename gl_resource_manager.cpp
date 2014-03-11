@@ -42,6 +42,12 @@ namespace
 		inline GLShader(GL::ResourceManager * resMgr, const std::pair<GL::Enum, std::string> & pair)
 			: GL::Shader(resMgr, pair.second, pair.first) {}
 	};
+
+	struct GLTexture : public GL::Texture
+	{
+		inline GLTexture(GL::ResourceManager * resMgr, const std::string & resName)
+			: GL::Texture(resMgr, resName) {}
+	};
 }
 
 GL::ResourceManager::ResourceManager()
@@ -66,37 +72,41 @@ void GL::ResourceManager::collectGarbage()
 	collectGarbageIn(m_AllResources);
 }
 
-GLTexturePtr GL::ResourceManager::createTexture(const std::string & name)
+GL::TexturePtr GL::ResourceManager::createTexture(const std::string & name)
 {
-	GLTexturePtr texture = std::make_shared<GLTexture>(this, name);
+	TexturePtr texture = std::static_pointer_cast<Texture>(std::make_shared<GLTexture>(this, name));
 	m_AllResources.push_back(texture);
 	return texture;
 }
 
-GLTexturePtr GL::ResourceManager::getTexture(const std::string & name, bool * isNew)
+GL::TexturePtr GL::ResourceManager::getTexture(const std::string & name)
 {
-	return getResource<GLTexture, GLTexture>(m_Textures, name, isNew);
+	bool isNew = false;
+	TexturePtr texture = getResource<Texture, GLTexture>(m_Textures, name, &isNew);
+	if (isNew)
+		texture->initFromResourceData(ResourceLoader::instance()->loadResource(name));
+	return texture;
 }
 
-GL::ShaderPtr GL::ResourceManager::createShader(GL::Enum type, const std::string & name)
+GL::ShaderPtr GL::ResourceManager::createShader(Enum type, const std::string & name)
 {
-	ShaderPtr shader = std::static_pointer_cast<GL::Shader>(std::make_shared<GLShader>(this, name, type));
+	ShaderPtr shader = std::static_pointer_cast<Shader>(std::make_shared<GLShader>(this, name, type));
 	m_AllResources.push_back(shader);
 	return shader;
 }
 
-GL::ShaderPtr GL::ResourceManager::getShader(GL::Enum type, const std::string & name)
+GL::ShaderPtr GL::ResourceManager::getShader(Enum type, const std::string & name)
 {
 	bool isNew = false;
-	ShaderPtr shader = getResource<GL::Shader, GLShader>(m_Shaders, std::make_pair(type, name), &isNew);
+	ShaderPtr shader = getResource<Shader, GLShader>(m_Shaders, std::make_pair(type, name), &isNew);
 	if (isNew)
-		shader->initFromSource(GL::ResourceLoader::instance()->loadResource(name));
+		shader->initFromSource(ResourceLoader::instance()->loadResource(name));
 	return shader;
 }
 
 GL::ProgramPtr GL::ResourceManager::createProgram(const std::string & name)
 {
-	ProgramPtr program = std::static_pointer_cast<GL::Program>(std::make_shared<GLProgram>(this, name));
+	ProgramPtr program = std::static_pointer_cast<Program>(std::make_shared<GLProgram>(this, name));
 	m_AllResources.push_back(program);
 	return program;
 }
@@ -104,9 +114,9 @@ GL::ProgramPtr GL::ResourceManager::createProgram(const std::string & name)
 GL::ProgramPtr GL::ResourceManager::getProgram(const std::string & name)
 {
 	bool isNew = false;
-	ProgramPtr program = getResource<GL::Program, GLProgram>(m_Programs, name, &isNew);
+	ProgramPtr program = getResource<Program, GLProgram>(m_Programs, name, &isNew);
 	if (isNew)
-		program->initFromSource(GL::ResourceLoader::instance()->loadResource(name));
+		program->initFromSource(ResourceLoader::instance()->loadResource(name));
 	return program;
 }
 

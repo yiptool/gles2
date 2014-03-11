@@ -72,8 +72,24 @@ namespace GL
 		 */
 		virtual void collectGarbage();
 
-		GLTexturePtr createTexture(const std::string & name = m_DefaultTextureName);
-		GLTexturePtr getTexture(const std::string & name, bool * isNew);
+		/**
+		 * Creates new texture.
+		 * This method always creates a new texture, even if there is one with the same name in the resource
+		 * manager. Created texture is not registered within a manager.
+		 * @param name Name of the texture (optional). This is the name that will be returned by
+		 * GL::Resource::name().
+		 * @return Pointer to the texture.
+		 */
+		TexturePtr createTexture(const std::string & name = m_DefaultTextureName);
+
+		/**
+		 * Loads texture with the specified name.
+		 * This method does not load a texture if it has already been loaded; in this case it returns
+		 * the cached texture.
+		 * @param name Name of the texture.
+		 * @return Pointer to the texture.
+		 */
+		TexturePtr getTexture(const std::string & name);
 
 		/**
 		 * Creates new shader.
@@ -92,8 +108,6 @@ namespace GL
 		 * the cached shader.
 		 * @param type Type of the shader. Could be GL::VERTEX_SHADER or GL::FRAGMENT_SHADER.
 		 * @param name Name of the shader.
-		 * @param isNew Pointer to the variable where kind of the operation will be stored:
-		 * *true* means that shader has been loaded and *false* means that cached shader has been returned.
 		 * @return Pointer to the shader.
 		 */
 		ShaderPtr getShader(Enum type, const std::string & name);
@@ -124,7 +138,7 @@ namespace GL
 		static const std::string m_DefaultProgramName;
 
 		std::vector<ResourceWeakPtr> m_AllResources;
-		std::unordered_map<std::string, GLTextureWeakPtr> m_Textures;
+		std::unordered_map<std::string, TextureWeakPtr> m_Textures;
 		std::unordered_map<Internal::ShaderMapKey, ShaderWeakPtr, Internal::ShaderMapKeyHash> m_Shaders;
 		std::unordered_map<std::string, ProgramWeakPtr> m_Programs;
 
@@ -132,8 +146,8 @@ namespace GL
 		template <class T, class P, class M, class K>
 			std::shared_ptr<T> getResource(M & map, const K & key, bool * isNew);
 
-		ResourceManager(const ResourceManager &);
-		ResourceManager & operator=(const ResourceManager &);
+		ResourceManager(const ResourceManager &) = delete;
+		ResourceManager & operator=(const ResourceManager &) = delete;
 
 		friend class Shader;
 		friend class Program;

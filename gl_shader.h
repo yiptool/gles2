@@ -98,7 +98,9 @@ namespace GL
 		friend class ResourceManager;
 	};
 
+	/** Strong pointer to the OpenGL ES shader. */
 	typedef std::shared_ptr<Shader> ShaderPtr;
+	/** Weak pointer to the OpenGL ES shader. */
 	typedef std::weak_ptr<Shader> ShaderWeakPtr;
 }
 

@@ -26,36 +26,97 @@
 #include "gl_resource.h"
 #include "gl.h"
 
-class GLTexture : public GL::Resource
+namespace GL
 {
-public:
-	inline void bind(GL::Enum target = GL::TEXTURE_2D) { GL::bindTexture(target, m_Handle); }
+	/** OpenGL ES texture. */
+	class Texture : public Resource
+	{
+	public:
+		/**
+		 * Binds texture into the OpenGL context.
+		 * This is equivalent to GL::bindTexture.
+		 * @param target Target to bind texture to (default is GL::TEXTURE_2D).
+		 */
+		inline void bind(Enum target = GL::TEXTURE_2D) { GL::bindTexture(target, m_Handle); }
 
-	int width() const { return m_Width; }
-	int height() const { return m_Height; }
+		/**
+		 * Initializes texture from resource data.
+		 * @note This method binds the texture into the OpenGL context.
+		 * @param data Pointer to the resource data.
+		 * @param size Size of the resource data.
+		 */
+		void initFromResourceData(const void * data, size_t size);
 
-	inline void setSize(int w, int h) { m_Width = w; m_Height = h; }
-	inline void setWidth(int w) { m_Width = w; }
-	inline void setHeight(int h) { m_Height = h; }
+		/**
+		 * Initializes texture from resource data.
+		 * @note This method binds the texture into the OpenGL context.
+		 * @param d Resource data.
+		 */
+		inline void initFromResourceData(const std::string & d) { initFromResourceData(d.data(), d.size()); }
 
-//protected:
-	GLTexture(GL::ResourceManager * mgr, const std::string & resName);
-	~GLTexture();
+		/**
+		 * Returns width of the texture in pixels.
+		 * @return Width of the texture in pixels.
+		 */
+		int width() const { return m_Width; }
 
-	void destroy();
+		/**
+		 * Returns height of the texture in pixels.
+		 * @return Height of the texture in pixels.
+		 */
+		int height() const { return m_Height; }
 
-private:
-	GL::UInt m_Handle;
-	int m_Width;
-	int m_Height;
+		/**
+		 * Sets size of the texture in pixels.
+		 * @param w Width of the texture in pixels.
+		 * @param h Height of the texture in pixels.
+		 */
+		inline void setSize(int w, int h) { m_Width = w; m_Height = h; }
 
-	GLTexture(const GLTexture &);
-	GLTexture & operator=(const GLTexture &);
+		/**
+		 * Sets width of the texture in pixels.
+		 * @param w Width of the texture in pixels.
+		 */
+		inline void setWidth(int w) { m_Width = w; }
 
-	friend class GL::ResourceManager;
-};
+		/**
+		 * Sets height of the texture in pixels.
+		 * @param w Height of the texture in pixels.
+		 */
+		inline void setHeight(int h) { m_Height = h; }
 
-typedef std::shared_ptr<GLTexture> GLTexturePtr;
-typedef std::weak_ptr<GLTexture> GLTextureWeakPtr;
+	protected:
+		/**
+		 * Constructor.
+		 * @param mgr Pointer to the resource manager.
+		 * @param resName Name of the texture resource.
+		 */
+		Texture(ResourceManager * mgr, const std::string & resName);
+
+		/** Destructor. */
+		~Texture();
+
+		/**
+		 * Releases the associated OpenGL texture.
+		 * This is equivalent to GL::deleteTextures.
+		 */
+		void destroy();
+
+	private:
+		UInt m_Handle;
+		int m_Width;
+		int m_Height;
+
+		Texture(const Texture &) = delete;
+		Texture & operator=(const Texture &) = delete;
+
+		friend class ResourceManager;
+	};
+
+	/** Strong pointer to the OpenGL ES texture. */
+	typedef std::shared_ptr<Texture> TexturePtr;
+	/** Weak pointer to the OpenGL ES texture. */
+	typedef std::weak_ptr<Texture> TextureWeakPtr;
+}
 
 #endif
