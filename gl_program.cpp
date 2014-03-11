@@ -149,6 +149,8 @@ void GL::Program::initFromSource(const char * data)
 		shader->initFromSource(fragment);
 		attachShader(shader);
 	}
+
+	link();
 }
 
 void GL::Program::link()
