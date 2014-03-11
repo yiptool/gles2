@@ -31,18 +31,10 @@ GL::ResourceLoader::~ResourceLoader()
 
 std::string GL::ResourceLoader::loadResource(const std::string & name)
 {
-	std::ifstream stream;
+	ResourceStreamPtr stream = openResource(name);
 
-	stream.open(name.c_str(), std::ios::in | std::ios::binary);
-	if (!stream.is_open() || stream.fail() || stream.bad())
-	{
-		std::stringstream ss;
-		ss << "unable to open resource file '" << name << "'.";
-		throw std::runtime_error(ss.str());
-	}
-
-	std::string result((std::istreambuf_iterator<char>(stream)), std::istreambuf_iterator<char>());
-	if (stream.fail() || stream.bad())
+	std::string result((std::istreambuf_iterator<char>(*stream)), std::istreambuf_iterator<char>());
+	if (stream->fail() || stream->bad())
 	{
 		std::stringstream ss;
 		ss << "error reading resource file '" << name << "'.";
@@ -50,6 +42,21 @@ std::string GL::ResourceLoader::loadResource(const std::string & name)
 	}
 
 	return result;
+}
+
+GL::ResourceStreamPtr GL::ResourceLoader::openResource(const std::string & name)
+{
+	std::shared_ptr<std::ifstream> stream = std::make_shared<std::ifstream>();
+
+	stream->open(name.c_str(), std::ios::in | std::ios::binary);
+	if (!stream->is_open() || stream->fail() || stream->bad())
+	{
+		std::stringstream ss;
+		ss << "unable to open resource file '" << name << "'.";
+		throw std::runtime_error(ss.str());
+	}
+
+	return stream;
 }
 
 const GL::ResourceLoaderPtr & GL::ResourceLoader::instance()

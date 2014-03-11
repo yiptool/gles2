@@ -84,7 +84,7 @@ GL::TexturePtr GL::ResourceManager::getTexture(const std::string & name)
 	bool isNew = false;
 	TexturePtr texture = getResource<Texture, GLTexture>(m_Textures, name, &isNew);
 	if (isNew)
-		texture->initFromResourceData(ResourceLoader::instance()->loadResource(name));
+		texture->initFromStream(*ResourceLoader::instance()->openResource(name));
 	return texture;
 }
 

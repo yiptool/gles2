@@ -22,6 +22,7 @@
 //
 #include "gl_texture.h"
 #include "gl_resource_manager.h"
+#include "stb_image.h"
 #include <sstream>
 #include <stdexcept>
 
@@ -40,8 +41,38 @@ GL::Texture::~Texture()
 	destroy();
 }
 
-void GL::Texture::initFromResourceData(const void * data, size_t size)
+void GL::Texture::initFromStream(std::istream & stream, Stb::Image::Format fmt)
 {
+	Stb::ImagePtr image = Stb::Image::loadFromStream(stream, fmt);
+	uploadImage(*image, 0, GL::TEXTURE_2D);
+	GL::texParameterf(GL::TEXTURE_2D, GL::TEXTURE_WRAP_S, GL::CLAMP_TO_EDGE);
+	GL::texParameterf(GL::TEXTURE_2D, GL::TEXTURE_WRAP_T, GL::CLAMP_TO_EDGE);
+	GL::texParameterf(GL::TEXTURE_2D, GL::TEXTURE_MIN_FILTER, GL::LINEAR);
+	GL::texParameterf(GL::TEXTURE_2D, GL::TEXTURE_MAG_FILTER, GL::LINEAR);
+}
+
+void GL::Texture::uploadImage(const Stb::Image & image, int level, GL::Enum target)
+{
+	GL::Enum fmt = GL::NONE;
+
+	switch (image.format())
+	{
+	case Stb::Image::UNKNOWN: break;
+	case Stb::Image::ALPHA: fmt = GL::ALPHA; break;
+	case Stb::Image::LUMINANCE_ALPHA: fmt = GL::LUMINANCE_ALPHA; break;
+	case Stb::Image::RGB: fmt = GL::RGB; break;
+	case Stb::Image::RGBA: fmt = GL::RGBA; break;
+	}
+
+	if (fmt == GL::NONE)
+		std::clog << "Unable to upload image to OpenGL: " << "image has invalid pixel format." << std::endl;
+
+	if (level == 0 || m_Width == 0 || m_Height == 0)
+		setSize(image.width(), image.height());
+
+	bind(target);
+	GL::pixelStorei(GL::UNPACK_ALIGNMENT, 1);
+	GL::texImage2D(target, level, fmt, image.width(), image.height(), 0, fmt, GL::UNSIGNED_BYTE, image.data());
 }
 
 void GL::Texture::destroy()

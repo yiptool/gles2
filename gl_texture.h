@@ -23,8 +23,10 @@
 #ifndef __2266940fc02274d1b0dbb64a279b3fa2__
 #define __2266940fc02274d1b0dbb64a279b3fa2__
 
+#include "stb_image.h"
 #include "gl_resource.h"
 #include "gl.h"
+#include <strstream>
 
 namespace GL
 {
@@ -40,19 +42,53 @@ namespace GL
 		inline void bind(Enum target = GL::TEXTURE_2D) { GL::bindTexture(target, m_Handle); }
 
 		/**
-		 * Initializes texture from resource data.
+		 * Initializes texture from the specified stream.
 		 * @note This method binds the texture into the OpenGL context.
-		 * @param data Pointer to the resource data.
-		 * @param size Size of the resource data.
+		 * @note This method changes GL::UNPACK_ALIGNMENT.
+		 * @param stream Stream to initialize from.
+		 * @param fmt Desired pixel format of the texture (image will be converted into the specified format).
+		 * Use Stb::Image::UNKNOWN to use format of the image.
 		 */
-		void initFromResourceData(const void * data, size_t size);
+		void initFromStream(std::istream & stream, Stb::Image::Format fmt = Stb::Image::UNKNOWN);
 
 		/**
-		 * Initializes texture from resource data.
+		 * Initializes texture from binary data.
 		 * @note This method binds the texture into the OpenGL context.
-		 * @param d Resource data.
+		 * @note This method changes GL::UNPACK_ALIGNMENT.
+		 * @param data Pointer to the data.
+		 * @param size Size of the data.
+		 * @param fmt Desired pixel format of the texture (image will be converted into the specified format).
+		 * Use Stb::Image::UNKNOWN to use format of the image.
 		 */
-		inline void initFromResourceData(const std::string & d) { initFromResourceData(d.data(), d.size()); }
+		inline void initFromData(const void * data, size_t size, Stb::Image::Format fmt = Stb::Image::UNKNOWN)
+		{
+			std::istrstream stream(reinterpret_cast<const char *>(data), static_cast<std::streamsize>(size));
+			initFromStream(stream, fmt);
+		}
+
+		/**
+		 * Initializes texture from binary data.
+		 * @note This method binds the texture into the OpenGL context.
+		 * @note This method changes GL::UNPACK_ALIGNMENT.
+		 * @param data Binary data.
+		 * @param fmt Desired pixel format of the texture (image will be converted into the specified format).
+		 * Use Stb::Image::UNKNOWN to use format of the image.
+		 */
+		inline void initFromData(const std::string & data, Stb::Image::Format fmt = Stb::Image::UNKNOWN)
+		{
+			std::istrstream stream(data.data(), data.size());
+			initFromStream(stream, fmt);
+		}
+
+		/**
+		 * Uploads the specified image into the specified mipmap level of the texture.
+		 * @note This method binds the texture into the OpenGL context.
+		 * @note This method changes GL::UNPACK_ALIGNMENT.
+		 * @param image Image.
+		 * @param level Mipmap level to upload image into
+		 * @param target Binding target for the texture.
+		 */
+		inline void uploadImage(const Stb::Image & image, int level = 0, Enum target = GL::TEXTURE_2D);
 
 		/**
 		 * Returns width of the texture in pixels.

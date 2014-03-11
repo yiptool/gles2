@@ -24,6 +24,7 @@
 #define __4d228f167919cb9cb5be84833a71acff__
 
 #include <string>
+#include <istream>
 #include <memory>
 
 namespace GL
@@ -32,6 +33,9 @@ namespace GL
 
 	/** Strong pointer to the resource loader. */
 	typedef std::shared_ptr<ResourceLoader> ResourceLoaderPtr;
+
+	/** Strong pointer to the instance of *std::istream*. */
+	typedef std::shared_ptr<std::istream> ResourceStreamPtr;
 
 	/**
 	 * Loader for resource files.
@@ -55,6 +59,14 @@ namespace GL
 		 * @throws std::runtime_error if resource file could not be loaded.
 		 */
 		virtual std::string loadResource(const std::string & name);
+
+		/**
+		 * Opens the specified resource file for reading.
+		 * @param name Name of the resource file.
+		 * @return Input stream for the resource.
+		 * @throws std::runtime_error if resource file could not be opened.
+		 */
+		virtual ResourceStreamPtr openResource(const std::string & name);
 
 		/**
 		 * Returns pointer to the instance of the resource loader.
