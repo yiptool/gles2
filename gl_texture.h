@@ -39,7 +39,7 @@ public:
 	inline void setHeight(int h) { m_Height = h; }
 
 //protected:
-	GLTexture(const std::string & resName);
+	GLTexture(GL::ResourceManager * mgr, const std::string & resName);
 	~GLTexture();
 
 	void destroy();

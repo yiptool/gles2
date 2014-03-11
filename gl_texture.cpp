@@ -25,12 +25,13 @@
 #include <sstream>
 #include <stdexcept>
 
-GLTexture::GLTexture(const std::string & resName)
+GLTexture::GLTexture(GL::ResourceManager * mgr, const std::string & resName)
 	: GL::Resource(resName),
 	  m_Handle(0),
 	  m_Width(0),
 	  m_Height(0)
 {
+	(void)mgr;
 	GL::genTextures(1, &m_Handle);
 }
 

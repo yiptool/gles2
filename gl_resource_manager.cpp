@@ -21,6 +21,7 @@
 // THE SOFTWARE.
 //
 #include "gl_resource_manager.h"
+#include "gl_resource_loader.h"
 
 const std::string GL::ResourceManager::m_DefaultTextureName = "<texture>";
 const std::string GL::ResourceManager::m_DefaultShaderName = "<shader>";
@@ -50,41 +51,50 @@ void GL::ResourceManager::collectGarbage()
 
 GLTexturePtr GL::ResourceManager::createTexture(const std::string & name)
 {
-	GLTexturePtr texture = std::make_shared<GLTexture>(name);
+	GLTexturePtr texture = std::make_shared<GLTexture>(this, name);
 	m_AllResources.push_back(texture);
 	return texture;
 }
 
 GLTexturePtr GL::ResourceManager::getTexture(const std::string & name, bool * isNew)
 {
-	return getRes<GLTexture>(m_Textures, name, isNew);
+	return getResource<GLTexture>(m_Textures, name, isNew);
 }
 
 GL::ShaderPtr GL::ResourceManager::createShader(GL::Enum type, const std::string & name)
 {
-	ShaderPtr shader = std::make_shared<Shader>(name, type);
+	ShaderPtr shader = std::make_shared<Shader>(this, name, type);
 	m_AllResources.push_back(shader);
 	return shader;
 }
 
-GL::ShaderPtr GL::ResourceManager::getShader(GL::Enum type, const std::string & name, bool * isNew)
+GL::ShaderPtr GL::ResourceManager::getShader(GL::Enum type, const std::string & name)
 {
-	return getRes<Shader>(m_Shaders, std::make_pair(type, name), isNew);
+	bool isNew = false;
+	ShaderPtr shader = getResource<Shader>(m_Shaders, std::make_pair(type, name), &isNew);
+	if (isNew)
+		shader->initFromSource(GL::ResourceLoader::instance()->loadResource(name));
+	return shader;
 }
 
 GL::ProgramPtr GL::ResourceManager::createProgram(const std::string & name)
 {
-	ProgramPtr program = std::make_shared<Program>(name);
+	ProgramPtr program = std::make_shared<Program>(this, name);
 	m_AllResources.push_back(program);
 	return program;
 }
 
-GL::ProgramPtr GL::ResourceManager::getProgram(const std::string & name, bool * isNew)
+GL::ProgramPtr GL::ResourceManager::getProgram(const std::string & name)
 {
-	return getRes<Program>(m_Programs, name, isNew);
+	bool isNew = false;
+	ProgramPtr program = getResource<Program>(m_Programs, name, &isNew);
+	if (isNew)
+		program->initFromSource(GL::ResourceLoader::instance()->loadResource(name));
+	return program;
 }
 
-template <class T, class M, class K> std::shared_ptr<T> GL::ResourceManager::getRes(M & map, const K & key, bool * isNew)
+template <class T, class M, class K>
+std::shared_ptr<T> GL::ResourceManager::getResource(M & map, const K & key, bool * isNew)
 {
 	std::shared_ptr<T> result;
 	typename M::iterator it = map.find(key);
@@ -99,7 +109,7 @@ template <class T, class M, class K> std::shared_ptr<T> GL::ResourceManager::get
 		if (isNew)
 			*isNew = true;
 
-		std::shared_ptr<T> resource = std::make_shared<T>(key);
+		std::shared_ptr<T> resource = std::make_shared<T>(this, key);
 		if (it != map.end())
 			it->second = resource;
 		else

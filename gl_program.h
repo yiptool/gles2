@@ -56,6 +56,18 @@ namespace GL
 		inline void detachShader(const ShaderPtr & shader) { GL::detachShader(m_Handle, shader->m_Handle); }
 
 		/**
+		 * Initializes program from source code.
+		 * @param data Source code.
+		 */
+		void initFromSource(const char * data);
+
+		/**
+		 * Initializes program from source code.
+		 * @param data Source code.
+		 */
+		inline void initFromSource(const std::string & data) { initFromSource(data.c_str()); }
+
+		/**
 		 * Links the program.
 		 * This is equivalent to GL::linkProgram but also reports any warnings and errors to *std::clog*.
 		 */
@@ -76,9 +88,10 @@ namespace GL
 //	protected:
 		/**
 		 * Constructor.
+		 * @param resMgr Pointer to the resource manager.
 		 * @param resName Name of the program resource.
 		 */
-		Program(const std::string & resName);
+		Program(ResourceManager * resMgr, const std::string & resName);
 
 		/** Destructor. */
 		~Program();
@@ -91,6 +104,7 @@ namespace GL
 
 	private:
 		UInt m_Handle;
+		ResourceManager * m_Manager;
 
 		Program(const Program &) = delete;
 		Program & operator=(const Program &) = delete;

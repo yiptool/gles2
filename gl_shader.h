@@ -26,6 +26,8 @@
 #include "gl_resource.h"
 #include "gl.h"
 #include <utility>
+#include <vector>
+#include <string>
 
 namespace GL
 {
@@ -49,20 +51,41 @@ namespace GL
 		 */
 		inline UInt handle() const { return m_Handle; }
 
+		/**
+		 * Initializes shader from source code.
+		 * @param data Source code.
+		 */
+		void initFromSource(const char * data);
+
+		/**
+		 * Initializes shader from source code.
+		 * @param data Source code.
+		 */
+		void initFromSource(const std::vector<const char *> & data);
+
+		/**
+		 * Initializes shader from source code.
+		 * @param data Source code.
+		 */
+		inline void initFromSource(const std::string & data) { initFromSource(data.c_str()); }
+
 //	protected:
 		/**
 		 * Constructor.
+		 * @param manager Pointer to the resource manager.
 		 * @param resName Name of the shader resource.
 		 * @param shaderType Type of the shader. Could be GL::VERTEX_SHADER or GL::FRAGMENT_SHADER.
 		 */
-		Shader(const std::string & resName, Enum shaderType);
+		Shader(ResourceManager * manager, const std::string & resName, Enum shaderType);
 
 		/**
 		 * Constructor.
+		 * @param manager Pointer to the resource manager.
 		 * @param pair Parameters of the shader. *first* should be type of the shader (either
 		 * GL::VERTEX_SHADER or GL::FRAGMENT_SHADER) and *second* should be name of the shader resource.
 		 */
-		inline Shader(const std::pair<Enum, std::string> & pair) : Shader(pair.second, pair.first) {}
+		inline Shader(ResourceManager * manager, const std::pair<Enum, std::string> & pair)
+			: Shader(manager, pair.second, pair.first) {}
 
 		/** Destructor. */
 		~Shader();

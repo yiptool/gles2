@@ -23,20 +23,53 @@
 #include "gl_shader.h"
 #include "gl_resource_manager.h"
 #include <sstream>
+#include <iostream>
 #include <iomanip>
 #include <stdexcept>
 
-GL::Shader::Shader(const std::string & resName, Enum shaderType)
+GL::Shader::Shader(ResourceManager * manager, const std::string & resName, Enum shaderType)
 	: Resource(resName),
 	  m_Handle(0),
 	  m_Type(shaderType)
 {
+	(void)manager;
 	m_Handle = GL::createShader(m_Type);
 }
 
 GL::Shader::~Shader()
 {
 	destroy();
+}
+
+void GL::Shader::initFromSource(const char * data)
+{
+	const GL::Char * source[1] = { data };
+	GL::shaderSource(m_Handle, 1, source, nullptr);
+	GL::compileShader(m_Handle);
+
+	GL::Int logLength = 0;
+	GL::getShaderiv(m_Handle, GL::INFO_LOG_LENGTH, &logLength);
+	if (logLength > 0)
+	{
+		std::vector<char> log(static_cast<size_t>(logLength + 1), 0);
+		GL::getShaderInfoLog(m_Handle, logLength, nullptr, log.data());
+		std::clog << log.data();
+	}
+}
+
+void GL::Shader::initFromSource(const std::vector<const char *> & data)
+{
+	GL::shaderSource(m_Handle, static_cast<GL::Sizei>(data.size()), (const Char **)data.data(), nullptr);
+	GL::compileShader(m_Handle);
+
+	GL::Int logLength = 0;
+	GL::getShaderiv(m_Handle, GL::INFO_LOG_LENGTH, &logLength);
+	if (logLength > 0)
+	{
+		std::vector<char> log(static_cast<size_t>(logLength + 1), 0);
+		GL::getShaderInfoLog(m_Handle, logLength, nullptr, log.data());
+		std::clog << log.data();
+	}
 }
 
 void GL::Shader::destroy()

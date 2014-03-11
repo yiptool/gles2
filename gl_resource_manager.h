@@ -96,7 +96,7 @@ namespace GL
 		 * *true* means that shader has been loaded and *false* means that cached shader has been returned.
 		 * @return Pointer to the shader.
 		 */
-		ShaderPtr getShader(Enum type, const std::string & name, bool * isNew);
+		ShaderPtr getShader(Enum type, const std::string & name);
 
 		/**
 		 * Creates new program.
@@ -114,11 +114,9 @@ namespace GL
 		 * the cached shader.
 		 * @param type Type of the shader. Could be GL::VERTEX_SHADER or GL::FRAGMENT_SHADER.
 		 * @param name Name of the shader.
-		 * @param isNew Pointer to the variable where kind of the operation will be stored:
-		 * *true* means that shader has been loaded and *false* means that cached shader has been returned.
 		 * @return Pointer to the shader.
 		 */
-		ProgramPtr getProgram(const std::string & name, bool * isNew);
+		ProgramPtr getProgram(const std::string & name);
 
 	private:
 		static const std::string m_DefaultTextureName;
@@ -130,7 +128,7 @@ namespace GL
 		std::unordered_map<Internal::ShaderMapKey, ShaderWeakPtr, Internal::ShaderMapKeyHash> m_Shaders;
 		std::unordered_map<std::string, ProgramWeakPtr> m_Programs;
 
-		template <class T, class M, class K> std::shared_ptr<T> getRes(M & map, const K & key, bool * isNew);
+		template <class T, class M, class K> std::shared_ptr<T> getResource(M & map, const K & key, bool * isNew);
 		template <class T> void collectGarbageIn(T & collection);
 
 		ResourceManager(const ResourceManager &);

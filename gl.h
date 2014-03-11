@@ -84,8 +84,6 @@ namespace GL
 	typedef ptrdiff_t Intptr;
 	typedef ptrdiff_t Sizeiptr;
 
-	typedef std::string (* PFNLOADSHADERPROC)(const std::string & name);
-
 	void init();
 
 	void activeTexture(Enum texture);
@@ -236,18 +234,6 @@ namespace GL
 	void viewport(Int x, Int y, Sizei width, Sizei height);
 
 	Int getInteger(Enum param);
-
-	UInt createShaderFromSource(Enum type, const char * data);
-	UInt createShaderFromSource(Enum type, const std::string & data);
-
-	void initShaderFromSource(UInt shader, const char * data);
-	void initShaderFromSource(UInt shader, const std::vector<const char *> & data);
-	void initShaderFromSource(UInt shader, const std::string & data);
-
-	void initProgramFromSource(UInt program, const char * data,
-		ResourceManager * resmgr = NULL, PFNLOADSHADERPROC loadFile = NULL);
-	void initProgramFromSource(UInt program, const std::string & data,
-		ResourceManager * resmgr = NULL, PFNLOADSHADERPROC loadFile = NULL);
 }
 
 #endif
