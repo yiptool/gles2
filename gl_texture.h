@@ -117,7 +117,7 @@ namespace GL
 
 		/**
 		 * Sets height of the texture in pixels.
-		 * @param w Height of the texture in pixels.
+		 * @param h Height of the texture in pixels.
 		 */
 		inline void setHeight(int h) { m_Height = h; }
 

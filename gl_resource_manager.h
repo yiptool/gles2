@@ -124,11 +124,10 @@ namespace GL
 
 		/**
 		 * Loads program with the specified name.
-		 * This method does not load a shader if it has already been loaded; in this case it returns
-		 * the cached shader.
-		 * @param type Type of the shader. Could be GL::VERTEX_SHADER or GL::FRAGMENT_SHADER.
-		 * @param name Name of the shader.
-		 * @return Pointer to the shader.
+		 * This method does not load a program if it has already been loaded; in this case it returns
+		 * the cached program.
+		 * @param name Name of the program.
+		 * @return Pointer to the program.
 		 */
 		ProgramPtr getProgram(const std::string & name);
 

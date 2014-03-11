@@ -59,7 +59,7 @@ namespace Stb
 
 		/**
 		 * Loads image from the specified input stream.
-		 * @param stream Stream to load image from.
+		 * @param s Stream to load image from.
 		 * @param fmt Target format. The image will be converted into the requested format, if needed.
 		 * To automatically detect target format, value of UNKNOWN could be used.
 		 */
