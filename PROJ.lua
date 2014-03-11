@@ -26,6 +26,8 @@ SOURCE_FILES {
 	"gl_program.h",
 	"gl_resource.cpp",
 	"gl_resource.h",
+	"gl_resource_loader.cpp",
+	"gl_resource_loader.h",
 	"gl_resource_manager.cpp",
 	"gl_resource_manager.h",
 	"gl_shader.cpp",

@@ -71,7 +71,7 @@ same resource.
 
 #### File format of shaders
 
-Shaders are simply a source file in the GLSL language.
+Shaders are simply source files in the GLSL language.
 
 Please note that you have to support both GLSL and ESSL (OpenGL ES dialect of
 GLSL) in your shaders. For example, in OpenGL ES you have to specify floating-point
@@ -92,7 +92,7 @@ code. Empty lines are ignored. Lines starting with the '%' symbol are considered
 directives. Only two directives are allowed: *%vertex* and *%fragment*.
 
 The *%vertex* directive starts source code of a vertex shader. The *%fragment*
-directive starts source of a fragment shader. Optionally you could specify a
+directive starts source code of a fragment shader. Optionally you could specify a
 file name for any of this directives. In this case shader will be loaded from
 the specified file.
 
@@ -124,6 +124,25 @@ Sample program file that loads shaders from another files:
 
 Please note that shader file names are relative to the resources directory, not
 to the directory where the program file is located.
+
+#### Custom resource loader
+
+Default behavior of the library is to load resources from files using *std::ifstream*.
+If this is not a desired behavior, custom resource loader could be used. Overload the
+GL::ResourceLoader class and pass it's instance to the GL::ResourceLoader::setInstance()
+method:
+
+     class MyResourceLoader : public GL::ResourceLoader
+     {
+         std::string loadResource(const std::string & name)
+         {
+             // ...
+         }
+     };
+     
+     // ...
+     
+     GL::ResourceLoader::setInstance(std::make_shared<MyResourceLoader>());
 
 ### Dynamic resource creation
 

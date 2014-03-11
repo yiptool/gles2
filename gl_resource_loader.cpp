@@ -20,57 +20,53 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 //
-#ifndef __f471791f3e0fda4867317dc478eafd4f__
-#define __f471791f3e0fda4867317dc478eafd4f__
+#include "gl_resource_loader.h"
+#include <fstream>
+#include <sstream>
+#include <stdexcept>
 
-#include <string>
-#include <cassert>
-#include <memory>
-
-namespace GL
+GL::ResourceLoader::~ResourceLoader()
 {
-	class ResourceManager;
-
-	/** Base class for resources managed by GL::ResourceManager. */
-	class Resource
-	{
-	public:
-		/**
-		 * Returns name of the resource.
-		 * @return Name of the resource.
-		 */
-		inline const std::string & name() const noexcept { return m_Name; }
-
-	protected:
-		/**
-		 * Constructor.
-		 * @param resName Name of the resource.
-		 */
-		Resource(const std::string & resName);
-
-		/** Destructor. */
-		virtual ~Resource();
-
-		/**
-		 * Releases the associated OpenGL resource.
-		 * This method allows to release the associated OpenGL resource without actually destroying
-		 * this instance of GL::Resource.
-		 */
-		virtual void destroy() = 0;
-
-	private:
-		std::string m_Name;
-
-		Resource(const Resource &) = delete;
-		Resource & operator=(const Resource &) = delete;
-
-		friend class ResourceManager;
-	};
-
-	/** Strong pointer to the OpenGL resource. */
-	typedef std::shared_ptr<Resource> ResourcePtr;
-	/** Weak pointer to the OpenGL resource. */
-	typedef std::weak_ptr<Resource> ResourceWeakPtr;
 }
 
-#endif
+std::string GL::ResourceLoader::loadResource(const std::string & name)
+{
+	std::ifstream stream;
+
+	stream.open(name.c_str(), std::ios::in | std::ios::binary);
+	if (!stream.is_open() || stream.fail() || stream.bad())
+	{
+		std::stringstream ss;
+		ss << "unable to open resource file '" << name << "'.";
+		throw std::runtime_error(ss.str());
+	}
+
+	std::string result((std::istreambuf_iterator<char>(stream)), std::istreambuf_iterator<char>());
+	if (stream.fail() || stream.bad())
+	{
+		std::stringstream ss;
+		ss << "error reading resource file '" << name << "'.";
+		throw std::runtime_error(ss.str());
+	}
+
+	return result;
+}
+
+const GL::ResourceLoaderPtr & GL::ResourceLoader::instance()
+{
+	ResourceLoaderPtr & ptr = pointer();
+	if (!ptr)
+		ptr = std::make_shared<ResourceLoader>();
+	return ptr;
+}
+
+void GL::ResourceLoader::setInstance(const ResourceLoaderPtr & loader)
+{
+	pointer() = loader;
+}
+
+GL::ResourceLoaderPtr & GL::ResourceLoader::pointer()
+{
+	static ResourceLoaderPtr pointer;
+	return pointer;
+}
