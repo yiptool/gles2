@@ -161,7 +161,7 @@ void GL::Program::link()
 	{
 		std::vector<char> log(static_cast<size_t>(logLength + 1), 0);
 		GL::getProgramInfoLog(m_Handle, logLength, nullptr, log.data());
-		std::clog << "Linking program \"" << name() << "\":\n" << log.data();
+		std::clog << "Linking program \"" << name() << "\":\n" << log.data() << std::endl;
 	}
 }
 
@@ -175,7 +175,7 @@ void GL::Program::validate()
 	{
 		std::vector<char> log(static_cast<size_t>(logLength + 1), 0);
 		GL::getProgramInfoLog(m_Handle, logLength, nullptr, log.data());
-		std::clog << "Validating program \"" << name() << "\":\n" << log.data();
+		std::clog << "Validating program \"" << name() << "\":\n" << log.data() << std::endl;
 	}
 }
 

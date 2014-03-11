@@ -53,7 +53,7 @@ void GL::Shader::initFromSource(const char * data)
 	{
 		std::vector<char> log(static_cast<size_t>(logLength + 1), 0);
 		GL::getShaderInfoLog(m_Handle, logLength, nullptr, log.data());
-		std::clog << log.data();
+		std::clog << log.data() << std::endl;
 	}
 }
 
@@ -68,7 +68,7 @@ void GL::Shader::initFromSource(const std::vector<const char *> & data)
 	{
 		std::vector<char> log(static_cast<size_t>(logLength + 1), 0);
 		GL::getShaderInfoLog(m_Handle, logLength, nullptr, log.data());
-		std::clog << log.data();
+		std::clog << log.data() << std::endl;
 	}
 }
 

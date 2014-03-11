@@ -45,13 +45,13 @@
  #define CHECK_GL_LOCATION(name, var, location) \
 	{ \
 		if (location < 0) \
-			std::clog << #name << "(\"" << var << "\") returned " << location << '.'; \
+			std::clog << #name << "(\"" << var << "\") returned " << location << '.' << std::endl; \
 	}
  #define CHECK_GL_ERROR_(name, params) \
 	{ \
 		GL::Enum err = GL::getError(); \
 		if (err != GL::NO_ERROR) \
-			std::clog << #name << '(' << params << "): " << err << '.'; \
+			std::clog << #name << '(' << params << "): " << err << '.' << std::endl; \
 	}
  #define CHECK_GL_ERROR0(name) CHECK_GL_ERROR_(name, "")
  #define CHECK_GL_ERROR1(name, p) CHECK_GL_ERROR_(name, p)
