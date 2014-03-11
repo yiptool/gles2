@@ -384,6 +384,8 @@ typedef unsigned char validate_uint32[sizeof(uint32)==4 ? 1 : -1];
    #define stbi_lrot(x,y)  (((x) << (y)) | ((x) >> (32 - (y))))
 #endif
 
+#define STBI_ASSERT(x, y) if (((assert(x)), (x))) {} else { y; }
+
 ///////////////////////////////////////////////
 //
 //  stbi struct and start_xxx functions
@@ -837,7 +839,7 @@ static unsigned char *convert_format(unsigned char *data, int img_n, int req_com
    unsigned char *good;
 
    if (req_comp == img_n) return data;
-   assert(req_comp >= 1 && req_comp <= 4);
+   STBI_ASSERT(req_comp >= 1 && req_comp <= 4, free(data); return epuc("assert", "Assertion failure"));
 
    good = (unsigned char *) malloc(req_comp * x * y);
    if (good == NULL) {
@@ -866,7 +868,7 @@ static unsigned char *convert_format(unsigned char *data, int img_n, int req_com
          CASE(4,1) dest[0]=compute_y(src[0],src[1],src[2]); break;
          CASE(4,2) dest[0]=compute_y(src[0],src[1],src[2]), dest[1] = src[3]; break;
          CASE(4,3) dest[0]=src[0],dest[1]=src[1],dest[2]=src[2]; break;
-         default: assert(0);
+         default: STBI_ASSERT(0, free(data); return epuc("assert", "Assertion failure"));
       }
       #undef CASE
    }
@@ -1103,7 +1105,7 @@ stbi_inline static int decode(jpeg *j, huffman *h)
 
    // convert the huffman code to the symbol id
    c = ((j->code_buffer >> (32 - k)) & bmask[k]) + h->delta[k];
-   assert((((j->code_buffer) >> (32 - h->size[c])) & bmask[h->size[c]]) == h->code[c]);
+   STBI_ASSERT((((j->code_buffer) >> (32 - h->size[c])) & bmask[h->size[c]]) == h->code[c], return -1);
 
    // convert the id to a symbol
    j->code_bits -= k;
@@ -1975,7 +1977,7 @@ stbi_inline static int bitreverse16(int n)
 
 stbi_inline static int bit_reverse(int v, int bits)
 {
-   assert(bits <= 16);
+   STBI_ASSERT(bits <= 16, return 0);
    // to bit reverse n bits, reverse 16 and shift
    // e.g. 11 bits, bit reverse and shift away 5
    return bitreverse16(v) >> (16-bits);
@@ -1993,7 +1995,7 @@ static int zbuild_huffman(zhuffman *z, uint8 *sizelist, int num)
       ++sizes[sizelist[i]];
    sizes[0] = 0;
    for (i=1; i < 16; ++i)
-      assert(sizes[i] <= (1 << i));
+      STBI_ASSERT(sizes[i] <= (1 << i), return e("assert","Assertion failed"));
    code = 0;
    for (i=1; i < 16; ++i) {
       next_code[i] = code;
@@ -2055,7 +2057,7 @@ stbi_inline static int zget8(zbuf *z)
 static void fill_bits(zbuf *z)
 {
    do {
-      assert(z->code_buffer < (1U << z->num_bits));
+      STBI_ASSERT(z->code_buffer < (1U << z->num_bits), (void)0);
       z->code_buffer |= zget8(z) << z->num_bits;
       z->num_bits += 8;
    } while (z->num_bits <= 24);
@@ -2092,7 +2094,7 @@ stbi_inline static int zhuffman_decode(zbuf *a, zhuffman *z)
    if (s == 16) return -1; // invalid code!
    // code size is s, so:
    b = (k >> (16-s)) - z->firstcode[s] + z->firstsymbol[s];
-   assert(z->size[b] == s);
+   STBI_ASSERT(z->size[b] == s, return -1);
    a->code_buffer >>= s;
    a->num_bits -= s;
    return z->value[b];
@@ -2179,7 +2181,7 @@ static int compute_huffman_codes(zbuf *a)
    n = 0;
    while (n < hlit + hdist) {
       int c = zhuffman_decode(a, &z_codelength);
-      assert(c >= 0 && c < 19);
+      STBI_ASSERT(c >= 0 && c < 19, return e("assert","Assertion failed"));
       if (c < 16)
          lencodes[n++] = (uint8) c;
       else if (c == 16) {
@@ -2191,7 +2193,7 @@ static int compute_huffman_codes(zbuf *a)
          memset(lencodes+n, 0, c);
          n += c;
       } else {
-         assert(c == 18);
+         STBI_ASSERT(c == 18, return e("assert","Assertion failed"));
          c = zreceive(a,7)+11;
          memset(lencodes+n, 0, c);
          n += c;
@@ -2216,7 +2218,7 @@ static int parse_uncompressed_block(zbuf *a)
       a->code_buffer >>= 8;
       a->num_bits -= 8;
    }
-   assert(a->num_bits == 0);
+   STBI_ASSERT(a->num_bits == 0, return e("assert","Assertion failed"));
    // now fill header the normal way
    while (k < 4)
       header[k++] = (uint8) zget8(a);
@@ -2446,7 +2448,7 @@ static int create_png_image_raw(png *a, uint8 *raw, uint32 raw_len, int out_n, u
    uint32 i,j,stride = x*out_n;
    int k;
    int img_n = s->img_n; // copy it into a local for later
-   assert(out_n == s->img_n || out_n == s->img_n+1);
+   STBI_ASSERT(out_n == s->img_n || out_n == s->img_n+1, return e("assert","Assertion failed"));
    if (stbi_png_partial) y = 1;
    a->out = (uint8 *) malloc(x * y * out_n);
    if (!a->out) return e("outofmem", "Out of memory");
@@ -2497,7 +2499,7 @@ static int create_png_image_raw(png *a, uint8 *raw, uint32 raw_len, int out_n, u
          }
          #undef CASE
       } else {
-         assert(img_n+1 == out_n);
+         STBI_ASSERT(img_n+1 == out_n, return e("assert", "Assertion failed"));
          #define CASE(f) \
              case f:     \
                 for (i=x-1; i >= 1; --i, cur[img_n]=255,raw+=img_n,cur+=out_n,prior+=out_n) \
@@ -2567,7 +2569,7 @@ static int compute_transparency(png *z, uint8 tc[3], int out_n)
 
    // compute color-based transparency, assuming we've
    // already got 255 as the alpha value in the output
-   assert(out_n == 2 || out_n == 4);
+   STBI_ASSERT(out_n == 2 || out_n == 4, return 0);
 
    if (out_n == 2) {
       for (i=0; i < pixel_count; ++i) {
@@ -2647,7 +2649,7 @@ static void stbi_de_iphone(png *z)
          p += 3;
       }
    } else {
-      assert(s->img_out_n == 4);
+      STBI_ASSERT(s->img_out_n == 4, return);
       if (stbi_unpremultiply_on_load) {
          // convert bgr to rgb and unpremultiply
          for (i=0; i < pixel_count; ++i) {
@@ -3019,7 +3021,7 @@ static stbi_uc *bmp_load(stbi *s, int *x, int *y, int *comp, int req_comp)
                return epuc("bad BMP", "bad BMP");
          }
       } else {
-         assert(hsz == 108);
+         STBI_ASSERT(hsz == 108, return epuc("assert", "Assertion failed"));
          mr = get32le(s);
          mg = get32le(s);
          mb = get32le(s);
