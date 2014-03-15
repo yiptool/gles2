@@ -22,7 +22,6 @@
 //
 #include "gl_texture.h"
 #include "gl_resource_manager.h"
-#include "stb_image.h"
 #include <sstream>
 #include <stdexcept>
 

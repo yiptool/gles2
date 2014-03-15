@@ -12,6 +12,15 @@ This README contains a quick tour over the features of the library. For complete
 list of types, constants, functions and classes, please build the reference manual
 using the [Doxygen](http://www.stack.nl/~dimitri/doxygen/) tool.
 
+Compiling this library
+----------------------
+
+This library is not intended to be built directly. Instead it is supposed
+to be included into projects using the [Yip](https://github.com/zapolnov/yip.git).
+
+Use the `import gl_wrappers` directive in your `Yipfile` to use this library.
+
+
 Wrappers
 --------
 
@@ -176,15 +185,6 @@ Please note that resource manager does not implement any caching: resources are
 considered alive only while there is at least one reference to them. If you want
 to cache the resources, you have to subclass the *GL::ResourceManager* class and
 implement caching functionality yourself.
-
-
-Compiling this library
-======================
-
-This library is not intended to be built directly. Instead it is supposed
-to be included into projects using the *buildtool*. Please consult the
-[buildtool](https://github.com/zapolnov/buildtool) documentation for more
-information.
 
 
 License

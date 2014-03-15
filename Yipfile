@@ -1,0 +1,41 @@
+
+import stb_image_cxx
+
+osx:framework OpenGL
+ios:framework OpenGLES
+
+sources
+{
+	gl.cpp
+	gl.h
+	gl_constants.h
+	gl_error.cpp
+	gl_error.h
+	gl_program.cpp
+	gl_program.h
+	gl_resource.cpp
+	gl_resource.h
+	gl_resource_loader.cpp
+	gl_resource_loader.h
+	gl_resource_manager.cpp
+	gl_resource_manager.h
+	gl_shader.cpp
+	gl_shader.h
+	gl_texture.cpp
+	gl_texture.h
+	gl_vertex_attrib_pointer.h
+}
+
+sources:qt
+{
+	qt/qt_gl.cpp
+}
+
+sources:!qt
+{
+	normal/normal_gl.cpp
+	normal/glew/include/GL/glew.h
+	normal/glew/include/GL/glxew.h
+	normal/glew/include/GL/wglew.h
+	normal/glew/src/glew.c.h
+}
