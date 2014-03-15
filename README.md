@@ -9,8 +9,9 @@ of this library. This library only provides convenient wrappers for OpenGL ES AP
 both the desktop and mobile platforms.
 
 This README contains a quick tour over the features of the library. For complete
-list of types, constants, functions and classes, please build the reference manual
-using the [Doxygen](http://www.stack.nl/~dimitri/doxygen/) tool.
+list of types, constants, functions and classes, please **build** the reference
+manual using the [Doxygen](http://www.stack.nl/~dimitri/doxygen/) tool.
+
 
 Compiling this library
 ----------------------
