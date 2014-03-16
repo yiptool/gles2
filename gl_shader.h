@@ -85,7 +85,7 @@ namespace GL
 		 * Releases the associated OpenGL shader.
 		 * This is equivalent to GL::deleteShader.
 		 */
-		void destroy();
+		void destroy() override;
 
 	private:
 		UInt m_Handle;

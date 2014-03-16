@@ -100,7 +100,7 @@ namespace GL
 		 * Releases the associated OpenGL program.
 		 * This is equivalent to GL::deleteProgram.
 		 */
-		void destroy();
+		void destroy() override;
 
 	private:
 		UInt m_Handle;

@@ -136,7 +136,7 @@ namespace GL
 		 * Releases the associated OpenGL texture.
 		 * This is equivalent to GL::deleteTextures.
 		 */
-		void destroy();
+		void destroy() override;
 
 	private:
 		UInt m_Handle;
