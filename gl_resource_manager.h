@@ -70,6 +70,9 @@ namespace GL
 		/** Destructor. */
 		virtual ~ResourceManager();
 
+		/** Destroys all resources managed by the resource manager. */
+		void destroyAllResources();
+
 		/**
 		 * Cleans up internal storage.
 		 * In default implementation this method cleans up internal tables from expired weak pointers.

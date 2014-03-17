@@ -57,6 +57,11 @@ GL::ResourceManager::ResourceManager(ResourceLoader & loader)
 
 GL::ResourceManager::~ResourceManager()
 {
+	destroyAllResources();
+}
+
+void GL::ResourceManager::destroyAllResources()
+{
 	for (const ResourceWeakPtr & resourceWeakPtr : m_AllResources)
 	{
 		std::shared_ptr<Resource> resource = resourceWeakPtr.lock();
