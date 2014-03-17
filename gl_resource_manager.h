@@ -30,6 +30,7 @@
 #include <string>
 #include <vector>
 #include <unordered_map>
+#include <memory>
 
 namespace GL
 {
@@ -157,6 +158,9 @@ namespace GL
 		friend class Program;
 		friend class GLTexture;
 	};
+
+	/** Strong pointer to the resource manager. */
+	typedef std::shared_ptr<ResourceManager> ResourceManagerPtr;
 }
 
 #endif
