@@ -24,6 +24,7 @@
 #include "../gl_error.h"
 #include <sstream>
 #include <stdexcept>
+#include <thread>
 
 #ifdef _WIN32
  #ifndef WIN32_LEAN_AND_MEAN
@@ -54,16 +55,22 @@
  } // namespace
 #endif
 
+#ifdef USE_GLEW
+static std::once_flag g_Init;
+#endif
+
 void GL::init()
 {
   #ifdef USE_GLEW
-	GLenum err = glewInit();
-	if (GLEW_OK != err)
-	{
-		std::stringstream ss;
-		ss << "unable to initialize the GLEW library: " << glewGetErrorString(err);
-		throw std::runtime_error(ss.str());
-	}
+	std::call_once(g_Init, [](){
+		GLenum err = glewInit();
+		if (GLEW_OK != err)
+		{
+			std::stringstream ss;
+			ss << "unable to initialize the GLEW library: " << glewGetErrorString(err);
+			throw std::runtime_error(ss.str());
+		}
+	});
   #endif
 }
 

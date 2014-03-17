@@ -25,12 +25,16 @@
 #include <QGLContext>
 #include <QGLFunctions>
 #include <cassert>
+#include <thread>
 
-QGLFunctions g_OpenGLFunctions;
+static QGLFunctions g_OpenGLFunctions;
+static std::once_flag g_Init;
 
 void GL::init()
 {
-	g_OpenGLFunctions.initializeGLFunctions();
+	std::call_once(g_Init, [](){
+		g_OpenGLFunctions.initializeGLFunctions();
+	});
 }
 
 void GL::activeTexture(Enum texture)
