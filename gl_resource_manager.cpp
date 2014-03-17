@@ -52,6 +52,7 @@ namespace
 GL::ResourceManager::ResourceManager(ResourceLoader & loader)
 	: m_ResourceLoader(&loader)
 {
+	GL::init();
 }
 
 GL::ResourceManager::~ResourceManager()
