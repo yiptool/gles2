@@ -1,33 +1,15 @@
 
-GLWrappers
-==========
+GL
+==
 
-This is the convenient C++11 library for cross-platform OpenGL ES 2.0 programming.
+This is a set of cross-platform wrappers over the OpenGL ES 2.0 API.
 
 Please note that OpenGL ES context creation and management is outside of the scope
-of this library. This library only provides convenient wrappers for OpenGL ES API on
-both the desktop and mobile platforms.
+of this library.
 
-This README contains a quick tour over the features of the library. For complete
-list of types, constants, functions and classes, please **build** the reference
-manual using the [Doxygen](http://www.stack.nl/~dimitri/doxygen/) tool.
-
-
-Compiling this library
-----------------------
-
-This library is not intended to be built directly. Instead it is supposed
-to be included into projects using the [Yip](https://github.com/zapolnov/yip.git).
-
-Use the `import gl_wrappers` directive in your `Yipfile` to use this library.
-
-
-Wrappers
---------
-
-All OpenGL types, constants, and functions are wrapped into the *GL* namespace.
-For example, to call the *glClear* function you may write the following piece
-of code:
+This library wraps all OpenGL types, constants, and functions into the *GL*
+namespace. For example, to call the *glClear* function you may write the
+following piece of code:
 
      GL::clear(GL::COLOR_BUFFER_BIT | GL::DEPTH_BUFFER_BIT);
 
@@ -55,138 +37,13 @@ Currently, there are three wrappers available:
 **Before usage, wrappers should be initialized by calling the *GL::init()*
 method.**
 
+Compiling this library
+----------------------
 
-Resource management
--------------------
+This library is not intended to be built directly. Instead it is supposed
+to be included into projects using the [Yip](https://github.com/zapolnov/yip.git).
 
-This library includes convenient C++ wrappers for OpenGL resources (textures,
-shaders, etc.).
-
-The *GL::Resource* class is a base class for all OpenGL resources. All managed
-resources have names which could be obtained using the *name()* method
-(usually resource name is a name of file from which resource has been loaded).
-
-The *GL::ResourceManager* class is a manager of resources. It creates instances
-of resources and tracks their usage.
-
-### Resource loading
-
-There are convenient methods available in the *GL::ResourceManager* class:
-
-*getShader(type, name)*  
-*getProgram(name)*  
-*getTexture(name)*  
-
-These methods load shaders, programs and textures respectively from files
-with the specified *name* and store them in the resource manager. If resource
-is already in memory, then these methods simply return a reference to the
-same resource.
-
-#### File format of shaders
-
-Shaders are simply source files in the GLSL language.
-
-Please note that you have to support both GLSL and ESSL (OpenGL ES dialect of
-GLSL) in your shaders. For example, in OpenGL ES you have to specify floating-point
-precision in the fragment shader. This is not supported in "desktop" OpenGL.
-
-You could use the *GL_ES* preprocessor definition to distinguish ESSL from GLSL:
-
-     #ifdef GL_ES
-     precision mediump float;
-     #endif
-
-#### File format of programs
-
-Programs are represented using a simple text format.
-
-Each line of a program file is either an empty line, a directive or a shader source
-code. Empty lines are ignored. Lines starting with the '%' symbol are considered
-directives. Only two directives are allowed: *%vertex* and *%fragment*.
-
-The *%vertex* directive starts source code of a vertex shader. The *%fragment*
-directive starts source code of a fragment shader. Optionally you could specify a
-file name for any of this directives. In this case shader will be loaded from
-the specified file.
-
-Sample program file:
-
-     %vertex
-
-     attribute vec2 a_position;
-     void main()
-     {
-         gl_Position = a_position;
-     }
-
-     %fragment
-
-     #ifdef GL_ES
-     precision mediump float;
-     #endif
-
-     void main()
-     {
-         gl_FragColor = vec4(1.0f);
-     }
-
-Sample program file that loads shaders from another files:
-
-     %vertex shader.vsh
-     %fragment shader.fsh
-
-Please note that shader file names are relative to the resources directory, not
-to the directory where the program file is located.
-
-#### Custom resource loader
-
-Default behavior of the library is to load resources from files using *std::ifstream*.
-If this is not a desired behavior, custom resource loader could be used. Overload the
-GL::ResourceLoader class and pass it's instance to the GL::ResourceManager constructor:
-
-     class MyResourceLoader : public GL::ResourceLoader
-     {
-         GL::ResourceStreamPtr openResource(const std::string & name)
-         {
-             // ...
-             return std::static_pointer_cast<std::istream>(std::make_shared<std::ifstream>(name));
-         }
-         std::string loadResource(const std::string & name)
-         {
-             // It is not necessary to overload this method: default implementation uses openResource()
-         }
-     };
-     
-     // ...
-     
-     GL::ResourceLoader::setInstance(std::make_shared<MyResourceLoader>());
-
-### Dynamic resource creation
-
-If you wouldn't like to load resource from file and would like to create it
-dynamically, then the following methods are available:
-
-*createShader(type, name)*  
-*createProgram(name)*  
-*createTexture(name)*  
-
-Note that these methods do not register resource in the manager. This means
-that *getShader*, *getProgram* and *getTexture* methods will not be able to
-retrieve these resources by their names. The only place where the name you pass
-to these methods is used, is the return value of the *name()* method of the
-corresponding instance of *GL::Resource*.
-
-### Resource tracking
-
-For *GL::ResourceManager* to work properly you have to periodically call the
-*collectGarbage()* method. If you decline to do so, negligible memory leaks
-are possible.
-
-Please note that resource manager does not implement any caching: resources are
-considered alive only while there is at least one reference to them. If you want
-to cache the resources, you have to subclass the *GL::ResourceManager* class and
-implement caching functionality yourself.
-
+Use the `import gl` directive in your `Yipfile` to use this library.
 
 License
 =======
@@ -288,19 +145,3 @@ IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
 CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 MATERIALS OR THE USE OR OTHER DEALINGS IN THE MATERIALS.
-
--------
-
-**Doxygen comments for some constants, functions and methods are based on the
-[OpenGL ES 2.0 Reference Pages](http://www.khronos.org/opengles/sdk/docs/man/)**.
-
-Copyright © 1991-2006 Silicon Graphics, Inc.  
-This document is licensed under the
-[SGI Free Software B License](http://oss.sgi.com/projects/FreeB/).
-
-Copyright © 2003-2005 3Dlabs Inc. Ltd.  
-Copyright © 2005 Addison-Wesley.  
-Copyright © 2006, 2008 Khronos Group.  
-This material may be distributed subject to the terms and conditions set
-forth in the [Open Publication License](http://opencontent.org/openpub/),
-v1.0, 8 June 1999.

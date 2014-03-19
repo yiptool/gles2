@@ -1,6 +1,4 @@
 
-import stb_image_cxx
-
 osx:framework OpenGL
 ios:framework OpenGLES
 
@@ -9,25 +7,12 @@ public_headers
 	gl.h
 	gl_constants.h
 	gl_error.h
-	gl_program.h
-	gl_resource.h
-	gl_resource_loader.h
-	gl_resource_manager.h
-	gl_shader.h
-	gl_texture.h
-	gl_vertex_attrib_pointer.h
 }
 
 sources
 {
 	gl.cpp
 	gl_error.cpp
-	gl_program.cpp
-	gl_resource.cpp
-	gl_resource_loader.cpp
-	gl_resource_manager.cpp
-	gl_shader.cpp
-	gl_texture.cpp
 }
 
 sources:qt

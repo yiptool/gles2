@@ -1,9 +1,9 @@
 # Doxyfile 1.8.6
 
 DOXYFILE_ENCODING      = UTF-8
-PROJECT_NAME           = "GL Wrappers"
+PROJECT_NAME           = "GL"
 PROJECT_NUMBER         =
-PROJECT_BRIEF          = "Convenient library for cross-platform OpenGL ES 2.0 programming."
+PROJECT_BRIEF          = "Cross-platform wrappers for OpenGL ES 2.0 API."
 PROJECT_LOGO           =
 OUTPUT_DIRECTORY       = doc
 CREATE_SUBDIRS         = NO
