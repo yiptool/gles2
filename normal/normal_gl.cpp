@@ -42,6 +42,8 @@
  #endif
 #elif defined(__ANDROID__)
  #include <GLES2/gl2.h>
+#elif defined(__TIZEN__)
+ #include <osp/gl2.h>
 #else
  #define USE_GLEW
 #endif
