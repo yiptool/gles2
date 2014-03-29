@@ -23,6 +23,8 @@
 #include "gl_error.h"
 #include <iomanip>
 
+#ifndef NDEBUG
+
 std::ostream & operator<<(std::ostream & s, GL::Enum value)
 {
 	switch (value)
@@ -68,3 +70,5 @@ std::string GL::decodeGLClearMask_(GL::Bitfield mask)
 
 	return ss.str();
 }
+
+#endif
